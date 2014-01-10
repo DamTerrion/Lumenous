@@ -1,0 +1,56 @@
+def read_dxf (dxf_file, stack):
+    file_string = False
+    line_count = 0
+
+    while file_string != "EOF":
+        if file_string != "ENTITIES":
+            file_string = dxf_file.readline()
+        else:
+            while file_string != "ENDSEC":
+                if file_string == "POLYLINE":
+                    vertex_counter = 0
+                    vertex = [{}]
+                    while file_string != "SEQEND":
+                        if file_string == " 40":
+                            file_string == dxf_file.readline()
+                            start_width = file_string
+                        elif file_string == " 41":
+                            file_string == dxf_file.readline()
+                            end_width = file_string
+                        elif file_string == "VERTEX":
+                            vertex_counter += 1
+                        elif file_string == " 10" and vertex_counter > 0:
+                            file_string == dxf_file.readline()
+                            vertex[vertex_counter]['x'] = file_string
+                        elif file_string == " 20" and vertex_counter > 0:
+                            file_string == dxf_file.readline()
+                            vertex[vertex_counter]['y'] = file_string
+                        else:
+                            file_string == dxf_file.readline()
+                    else:
+                        if vertex_counter > 2:
+                            print ("ERROR: MORE THAN 2 VERTEX")
+                            break
+                        elif vertex_couner <2:
+                            print ("ERROR: NOT ENOUGH VERTEX IN LINE")
+                        elif start_width == 0 or end_width == 0:
+                            print ("ERROR: NULL LINE DETECTED")
+                            break
+                        elif start_width != end_width :
+                            print ("ERROR: LINE IS NOT MONOSPACED")
+                            break
+                        line_x = (vertex[2]['x']+vertex[1]['x'])/2
+                        line_y = (vertex[2]['y']+vertex[1]['y'])/2
+                        line_a = atan((vertex[2]['x']-vertex[1]['x'])/(vertex[2]['x']-vertex[1]['x']))*180/pi
+                        line_height = ((vertex[2]['x']-vertex[1]['x']) ** 2 + (vertex[2]['y']-vertex[1]['y']) ** 2) ** 0.5
+                        line_width = start_width
+                        if line_y < 0 :
+                            line_v -= 2
+                        if line_a < 0 :
+                            line_v += 1
+                            line_width = ((vertex[2]['x']-vertex[1]['x']) ** 2 + (vertex[2]['y']-vertex[1]['y']) ** 2) ** 0.5
+                            line_height = start_width
+                            line_a += 90
+                    stack.append(SimpleLine(line_x, line_y, line_a, line_v, line_width, line_height))
+                file_string == dxf_file.readline()
+    return stack
