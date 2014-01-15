@@ -1,4 +1,4 @@
-def dxf (dxf_file):
+def read_dxf (dxf_file):
     file_string = 'False'
     line_count = 0
     while file_string != 'EOF'+'\n':
