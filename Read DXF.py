@@ -1,41 +1,58 @@
-def read_dxf (dxf_file):
-    file_string = 'False'
-    line_count = 0
-    while file_string != 'EOF'+'\n':
-        while file_string != 'ENTITIES'+'\n':
-            file_string = str(dxf_file.readline())
-            line_count += 1
+def dxf_read (dxf_name):
+    Stack = {'0':()}
+    Param = Value = ''
+    
+    Allowed_objects = {'_INIT_':    (' 0', ' 8'),
+                       'POLYLINE':  ('40', '41',
+                                     '66', '70'),
+                       'SOLID':     ('10', '20',
+                                     '11', '21',
+                                     '12', '22',
+                                     '13', '23'),
+                       'VERTEX':    ('10', '20', '42'),
+                       'SEQEND':    ()}
+
+    if dxf_name[-4:] != '.dxf' :
+        dxf_name += '.dxf'
+    dxf = open (dxf_name, 'r')
+    
+    while not (Param == ' 2' and Value == 'ENTITIES'):
+        Param = dxf.readline()[1:-1]
+        Value = dxf.readline()[:-1]
+        if Param == ' 0' and Value == 'EOF':
+            print ('ENTITIES SECTION NOT FOUND')
+            break
+    else :
+        Param = dxf.readline()[1:-1]
+        Value = dxf.readline()[:-1]
+        Current = {'type': None, 'points': 0}
+        while not (Param == ' 0' and Value == 'ENDSEC'):
+            if (Param == ' 0' and Value in Allowed_objects):
+                if Value != 'VERTEX':
+                    Current['type'] = Value
+                    counter = 0
+                else:
+                    counter += 1
+                while not Param == ' 0':
+                    if Param == ' 8': Layer = Value
+                    elif Param == '10' : Current[str(counter)]['x'] = Value
+                    elif Param == '20' : Current[str(counter)]['y'] = Value
+                    elif Param in ('11', '12', '13') :
+                        counter = max(counter, int(Param)%10+1)
+                        Current[str(int(Param)%10+1)]['x'] = Value
+                    elif Param in ('21', '22', '23') :
+                        counter = max(counter, int(Param)%10+1)
+                        Current[str(int(Param)%10+1)]['y'] = Value
+
+            Param = dxf.readline()
+            Value = dxf.readline()
+            # Ещё пока внутри ENTITIES считываются пары параметр-значение в конце итерации цикла
         else:
-            print (str(line_count)+'; Entites section', '\n')
-            while file_string != 'ENDSEC'+'\n':
-                if file_string == 'POLYLINE'+'\n':
-                    print (str(line_count)+'; Polyline', '\n')
-                    vertex_count = 0
-                    while file_string != 'SEQEND'+'\n':
-                        if file_string == 'VERTEX'+'\n':
-                            vertex_count += 1
-                            print (str(line_count)+'; Vertex #'+str(vertex_count), '\n')
-                            while file_string != '  0'+'\n':
-                                if file_string == ' 10'+'\n':
-                                    file_string = dxf_file.readline()
-                                    print (str(line_count)+'; 10:', file_string)
-                                    line_count += 1
-                                elif file_string == str(line_count)+' '+' 20'+'\n':
-                                    file_string = dxf_file.readline()
-                                    print (str(line_count)+'; 20:', file_string)
-                                    line_count += 1
-                                file_string = dxf_file.readline()
-                                line_count += 1
-                            else:
-                                print (' ----- end of  vertex  ----- \n')
-                        file_string = dxf_file.readline()
-                        line_count += 1
-                    else:
-                        print ('====== end of polyline ======\n')
-                file_string = dxf_file.readline()
-                line_count += 1
-            else:
-                print (str(line_count)+'; +++++ end of entites +++++\n')
-                break
-    else:
-        print ('!!! NO ENTITIES WAS FOUND IN FILE !!!')
+            # Раздел кончился, можно расслабиться и завершить запись данных
+            new += '  0\n'+'ENDSEC\n'+'  0\n'+'EOF\n'
+    dxf.close()
+    dxf = open (dxf_name, 'w')    
+    dxf.write(new)
+    dxf.close()
+    print ('Well done!')
+    # Запись в файл завершена, файлы закрыты, процедура завершена. EOF
