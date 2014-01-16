@@ -1,6 +1,9 @@
 def ndxf (dxf_name):
     new = Param = Value = ''
-    dxf = open (dxf_name+'.dxf', 'r')
+    if dxf_name[-4:] != '.dxf' :
+        dxf_name += '.dxf'
+    print (dxf_name)
+    dxf = open (dxf_name, 'r')
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
         # Если не начался раздел ENTITIES, файл просто просматривается
         Param = dxf.readline()
@@ -39,7 +42,8 @@ def ndxf (dxf_name):
                 Param == ' 33\n' or # Код 33 - координата Z точки 4
                 Param == ' 40\n' or # Код 40 - начальная ширина линии
                 Param == ' 41\n' or # Код 41 -  конечная ширина линии
-                Param == ' 66\n'    # Код 66 - флаг наличия графических примитивов
+                Param == ' 66\n' or # Код 66 - флаг наличия графических примитивов
+                Param == ' 70\n'    # Код 70 - предположительно, замкнутость линии
                 # Остальные параметры игнорируются
                 ):
                 if Param != ' 30\n' :
@@ -55,10 +59,14 @@ def ndxf (dxf_name):
             # Раздел кончился, можно расслабиться и завершить запись данных
             new += '  0\n'+'ENDSEC\n'+'  0\n'+'EOF\n'
     dxf.close()
-    dxf_n = open(dxf_name+'.n.dxf', 'w')
-    dxf_n.write(new)
-    dxf_n.close()
+    dxf = open (dxf_name, 'w')    
+    dxf.write(new)
+    dxf.close()
     print ('Well doned!')
     # Запись в файл завершена, файлы закрыты, процедура завершена. EOF
-
-ndxf (input("Введите имя DXF-файла для обработки: "))
+    
+code = ''
+while not (code == 'quit' or code == 'exit') :
+    code = input("Введите имя DXF-файла для обработки: ")
+    if code == 'quit' or code == 'exit': break
+    ndxf (code)
