@@ -1,20 +1,20 @@
 def dxf_read (dxf_name):
+    
+    if dxf_name[-4:] != '.dxf' :
+        dxf_name += '.dxf'
+    dxf = open (dxf_name, 'r')
+    
     Stack = {'0':()}
     Param = Value = ''
     
     Allowed_objects = {'_INIT_':    (' 0', ' 8'),
-                       'POLYLINE':  ('40', '41',
-                                     '66', '70'),
+                       'POLYLINE':  ('40', '41', '70'),
                        'SOLID':     ('10', '20',
                                      '11', '21',
                                      '12', '22',
                                      '13', '23'),
                        'VERTEX':    ('10', '20', '42'),
                        'SEQEND':    ()}
-
-    if dxf_name[-4:] != '.dxf' :
-        dxf_name += '.dxf'
-    dxf = open (dxf_name, 'r')
     
     while not (Param == ' 2' and Value == 'ENTITIES'):
         Param = dxf.readline()[1:-1]
@@ -43,16 +43,16 @@ def dxf_read (dxf_name):
                     elif Param in ('21', '22', '23') :
                         counter = max(counter, int(Param)%10+1)
                         Current[str(int(Param)%10+1)]['y'] = Value
+                    elif Param in ('40', '41') : Current['width'][str(int(Param)%10)] = Value
+                    elif Param in 42
+                    elif (Param == '70' and
+                          int(Value) == 1 and
+                          Current['type'] == 'POLYLINE'): Current['closed'] = True
 
             Param = dxf.readline()
             Value = dxf.readline()
             # Ещё пока внутри ENTITIES считываются пары параметр-значение в конце итерации цикла
-        else:
-            # Раздел кончился, можно расслабиться и завершить запись данных
-            new += '  0\n'+'ENDSEC\n'+'  0\n'+'EOF\n'
+
     dxf.close()
-    dxf = open (dxf_name, 'w')    
-    dxf.write(new)
-    dxf.close()
-    print ('Well done!')
+    print ('Done!')
     # Запись в файл завершена, файлы закрыты, процедура завершена. EOF
