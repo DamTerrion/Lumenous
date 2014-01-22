@@ -1,10 +1,13 @@
 class line (object):
-    def __init__ (self, x, y, lenght, width, angle):
-        self.x = x
-        self.y = y
-        self.l = lenght
-        self.w = width
-        self.a = angle
+	def __init__ (self, x, y, lenght, width, angle, layer):
+		self.x = x
+		self.y = y
+		self.l = lenght
+		self.w = width
+		self.ws = str(width)
+		self.a = angle
+		self.rad = (angle * pi() / 1800) % (2 * pi())
+		self.layer = layer
     
     def pat (size, reverse):
         
