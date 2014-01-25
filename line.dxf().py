@@ -2,20 +2,24 @@ from math import pi
 from math import cos
 from math import sin
 
-class line (object):
+class Line (object):
     def __init__ (self, x, y, lenght, width, angle, layer):
         self.x = x
+        self.rx = round(x)
         self.y = y
+        self.ry = round(y)
         self.l = lenght
         self.ls = str(lenght/1000)
         self.w = width
-        self.ws = str(width/1000) 
+        self.ws = str(width/1000)
         self.a = angle
         self.rad = (angle * pi / 1800) % (2 * pi)
         self.layer = layer
+        self.cos = cos(self.rad)
+        self.sin = sin(self.rad)
 
     def polyline (self):
-        l = ( self.l * cos(self.rad), self.l * sin(self.rad) )
+        l = ( self.l * self.cos, self.l * self.sin )
         p1 = ( self.x - l[0], self.y - l[1] ) 
         p2 = ( self.x + l[0], self.y + l[1] )
         out = ( '  0\nPOLYLINE\n'+
@@ -41,10 +45,8 @@ class line (object):
                  'Error':False }
         
     def rectangle (self):
-        c = cos(self.rad)
-        s = sin(self.rad)
-        l = ( self.l * c, self.l * s )
-        w = ( self.w * s, self.w * c) 
+        l = ( self.l * self.cos, self.l * self.sin )
+        w = ( self.w * self.sin, self.w * self.cos) 
         p1 = ( self.x - l[0] + w[0], self.y - l[1] + w[1] )
         p2 = ( self.x + l[0] + w[0], self.y + l[1] + w[1] )
         p3 = ( self.x + l[0] - w[0], self.y + l[1] - w[1] )
@@ -85,10 +87,8 @@ class line (object):
                  'Error':False }
         
     def solid (self):
-        c = cos(self.rad)
-        s = sin(self.rad)
-        l = ( self.l * c, self.l * s )
-        w = ( self.w * s, self.w * c) 
+        l = ( self.l * self.cos, self.l * self.sin )
+        w = ( self.w * self.sin, self.w * self.cos ) 
         p1 = ( self.x - l[0] + w[0], self.y - l[1] + w[1] )
         p2 = ( self.x + l[0] + w[0], self.y + l[1] + w[1] )
         p3 = ( self.x - l[0] - w[0], self.y - l[1] - w[1] )
