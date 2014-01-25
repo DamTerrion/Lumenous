@@ -1,9 +1,13 @@
 from math import pi
+from math import cos
+from math import sin
 
 class line (object):
     def __init__ (self, x, y, lenght, width, angle, layer):
         self.x = x
+        self.rx = round(x)
         self.y = y
+        self.ry = round(y)
         self.l = lenght
         self.ls = str(lenght/1000)
         self.w = width
@@ -11,6 +15,8 @@ class line (object):
         self.a = angle
         self.rad = (angle * pi / 1800) % (2 * pi)
         self.layer = layer
+        self.cos = cos(self.rad)
+        self.sin = sin(self.rad)
     
     def pat (plate, reverse):
         # Параметр "plate" обозначает тип пластины в формате A102x4 или M127
@@ -68,15 +74,15 @@ class line (object):
             break
         
         if reverse :
-            x = round(self.x)
+            x = self.rx
             a = round(self.a % 900)
         else:
-            x = size - self.x
+            x = size*1000 - self.rx
             if a :
                 a = 900 - round(self.a % 900)
             else :
                 a = 0
-        y = round(self.y)
+        y = self.ry
         
         if self.a % 1800 >= 900 :
             h = round(self.w)
@@ -85,5 +91,5 @@ class line (object):
             h = round(self.l)
             w = round(self.w)
         
-        return {'x':x, 'y':y, 'h':h, 'w':w, 'a':a, 'str':'X'+str(x)+'Y'+str(y)+'H'+str(h)+'W'+str(w)+'A'+str(a)+';\n'}
+        return {'x':x, 'y':y, 'h':h, 'w':w, 'a':a, 'out':'X'+str(x)+'Y'+str(y)+'H'+str(h)+'W'+str(w)+'A'+str(a)+';\n'}
         
