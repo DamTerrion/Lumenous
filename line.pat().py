@@ -5,16 +5,24 @@ from math import sin
 class Line (object):
     def __init__ (self, x, y, lenght, width, angle, layer):
         self.x = x
-        self.rx = round(x)
+        self.xr = round(x)
+        
         self.y = y
-        self.ry = round(y)
+        self.yr = round(y)
+        
         self.l = lenght
+        self.lr = round(lenght)
         self.ls = str(lenght/1000)
+        
         self.w = width
+        self.wr = round(width)
         self.ws = str(width/1000)
+        
         self.a = angle
+        self.ar = round(angle)
         self.rad = (angle * pi / 1800) % (2 * pi)
-        self.layer = layer
+        
+        self.layer = str(layer)
         self.cos = cos(self.rad)
         self.sin = sin(self.rad)
     
@@ -74,22 +82,22 @@ class Line (object):
             break
         
         if reverse :
-            x = self.rx
-            a = round(self.a % 900)
+            x = self.xr
+            a = self.ar % 900
         else:
-            x = size*1000 - self.rx
+            x = size*1000 - self.xr
             if a :
-                a = 900 - round(self.a % 900)
+                a = 900 - (self.ar % 900)
             else :
                 a = 0
-        y = self.ry
+        y = self.yr
         
         if self.a % 1800 >= 900 :
-            h = round(self.w)
-            w = round(self.l)
+            h = self.wr
+            w = self.lr
         else:
-            h = round(self.l)
-            w = round(self.w)
+            h = self.lr
+            w = self.wr
         
         return {'x':x, 'y':y, 'h':h, 'w':w, 'a':a, 'out':'X'+str(x)+'Y'+str(y)+'H'+str(h)+'W'+str(w)+'A'+str(a)+';\n'}
         
