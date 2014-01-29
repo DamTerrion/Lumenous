@@ -2,7 +2,7 @@ from math import pi
 from math import cos
 from math import sin
 
-class line (object):
+class Line (object):
     def __init__ (self, x, y, lenght, width, angle, layer):
         self.x = x
         self.rx = round(x)
