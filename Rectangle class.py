@@ -1,3 +1,5 @@
+from math import atan
+
 class Rect(x1, y1, x2, y2, x3, y3, x4, y4):
     def __init__ (self, x1, y1, x2, y2, x3, y3, x4, y4):
         self.point1 = {'x': x1, 'y': y1}
