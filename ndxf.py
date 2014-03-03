@@ -1,4 +1,4 @@
-from os import rename
+from os import replace
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -67,7 +67,7 @@ def ndxf (dxf_name):
             # Раздел кончился, можно расслабиться и завершить запись данных
             new += '  0\n'+'ENDSEC\n'+'  0\n'+'EOF\n'
     dxf.close()
-    rename (dxf_name, dxf_name+'.bak')
+    replace (dxf_name, dxf_name+'.bak')
     # После закрытия считываемого файла, к его расширению добавляется .bak
     # Так как имя исходного файла сменилось, создаётся новый файл с исходным именем
     dxf = open (dxf_name, 'w')    
