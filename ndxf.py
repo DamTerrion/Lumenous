@@ -1,4 +1,6 @@
 from os import replace
+from os import path
+from os import mkdir
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -67,8 +69,12 @@ def ndxf (dxf_name):
             # Раздел кончился, можно расслабиться и завершить запись данных
             new += '  0\n'+'ENDSEC\n'+'  0\n'+'EOF\n'
     dxf.close()
-    replace (dxf_name, dxf_name+'.bak')
+    if path.exists('bak') == False :
+        mkdir ('bak')
+    replace (dxf_name, 'bak/'+dxf_name+'.bak')
     # После закрытия считываемого файла, к его расширению добавляется .bak
+    # Сам файл с новым расширением перемещается в директорию bak/.
+    # Если такой директории не было, он создаётся.
     # Так как имя исходного файла сменилось, создаётся новый файл с исходным именем
     dxf = open (dxf_name, 'w')    
     dxf.write(new)
