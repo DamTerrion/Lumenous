@@ -1,6 +1,7 @@
 from os import replace
 from os import path
 from os import mkdir
+import clearing
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -83,7 +84,8 @@ def ndxf (dxf_name):
     # Запись в файл завершена, файлы закрыты, процедура завершена. EOF
     
 code = ''
-while not code in ('quit.dxf', 'exit.dxf', 'выход.dxf', 'конец.dxf') :
+clearing.bak()
+while True :
     code = input("Введите имя DXF-файла для обработки: ")
     if code in ('quit', 'exit', 'выход', 'конец') : break
     ndxf (code)
