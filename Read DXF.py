@@ -26,11 +26,15 @@ def dxf_read (dxf_name):
             break
     Current = {'type': None}
     while not (Param == ' 0' and Value == 'ENDSEC'):
+        # Цикл, продолжающийся до тех пор, пока не закончится раздел
         if (Param == ' 0' and Value in Allowed_objects):
             if Value != 'VERTEX':
                 Current['type'] = Value
                 counter = 0
+            Param = dxf.readline()[1:-1]
+            Value = dxf.readline()[:-1]                
             while not Param == ' 0':
+                # Цикл работает до тех пор, пока не найдёт конец объекта
                 if Param == ' 8': Current['Layer'] = Value
                 elif Param == '10' : Current[str(counter)]['x'] = Value
                 elif Param == '20' : Current[str(counter)]['y'] = Value
@@ -42,26 +46,32 @@ def dxf_read (dxf_name):
                     Current[str(int(Param)%10+1)]['y'] = Value
                 elif Param in ('40', '41') :
                     Current['width'][str(int(Param)%10)] = Value
+                    # Параметры, соответстветствующие ширине линии
                 elif Param == '42':
                     pass
+                    # Здесь должен быть код, определяющий обработку дуги
                 elif (Param == '70' and
                       int(Value) == 1 and
                       Current['type'] == 'POLYLINE'):
                     Current['closed'] = True
+                    # Это значит, что была принята замкнутая полилиния
                     
                 Param = dxf.readline()[1:-1]
                 Value = dxf.readline()[:-1]
             else:
                 if Value == 'VERTEX':
                     counter += 1
+                    # Если последним обработанным объектом является точка,
+                    # количество точек увеличивается на одну, цикл перезапускается.
+                    # Если объектом была не точка, происходит обработка.
                 elif Current['type'] == 'POLYLINE':
                     pass
+                    # Здесь должен быть код генерации объекта из полилинии
+                    # ВКЛЮЧАЯ ДУГИ И ПРЯМОУГОЛЬНИКИ!
                 elif Current['type'] == 'SOLID':
                     pass
+                    # Здесь должен быть код генерации объекта из фигуры
 
-            Param = dxf.readline()[1:-1]
-            Value = dxf.readline()[:-1]
-            # Ещё пока внутри ENTITIES считываются пары параметр-значение
 
     dxf.close()
     return Stack
