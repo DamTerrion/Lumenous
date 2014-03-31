@@ -22,46 +22,46 @@ def dxf_read (dxf_name):
         Param = dxf.readline()[1:-1]
         Value = dxf.readline()[:-1]
         if Param == ' 0' and Value == 'EOF':
-            print ('ENTITIES SECTION NOT FOUND')
+            return ('ENTITIES SECTION NOT FOUND')
             break
-    else :
-        Param = dxf.readline()[1:-1]
-        Value = dxf.readline()[:-1]
-        Current = {'type': None}
-        while not (Param == ' 0' and Value == 'ENDSEC'):
-            if (Param == ' 0' and Value in Allowed_objects):
-                if Value != 'VERTEX':
-                    Current['type'] = Value
-                    counter = 0
-                while not Param == ' 0':
-                    if Param == ' 8': Layer = Value
-                    elif Param == '10' : Current[str(counter)]['x'] = Value
-                    elif Param == '20' : Current[str(counter)]['y'] = Value
-                    elif Param in ('11', '12', '13') :
-                        counter = max(counter, int(Param)%10+1)
-                        Current[str(int(Param)%10+1)]['x'] = Value
-                    elif Param in ('21', '22', '23') :
-                        counter = max(counter, int(Param)%10+1)
-                        Current[str(int(Param)%10+1)]['y'] = Value
-                    elif Param in ('40', '41') : Current['width'][str(int(Param)%10)] = Value
-                    elif Param == '42':
-                        pass
-                    elif (Param == '70' and
-                          int(Value) == 1 and
-                          Current['type'] == 'POLYLINE'): Current['closed'] = True
-                    Param = dxf.readline()[1:-1]
-                    Value = dxf.readline()[:-1]
-                else:
-                    if Value == 'VERTEX':
-                        counter += 1
-                    elif Current['type'] == 'POLYLINE':
-                        pass
-                    elif Current['type'] == 'SOLID':
-                        pass
+    Current = {'type': None}
+    while not (Param == ' 0' and Value == 'ENDSEC'):
+        if (Param == ' 0' and Value in Allowed_objects):
+            if Value != 'VERTEX':
+                Current['type'] = Value
+                counter = 0
+            while not Param == ' 0':
+                if Param == ' 8': Current['Layer'] = Value
+                elif Param == '10' : Current[str(counter)]['x'] = Value
+                elif Param == '20' : Current[str(counter)]['y'] = Value
+                elif Param in ('11', '12', '13') :
+                    counter = max(counter, int(Param)%10+1)
+                    Current[str(int(Param)%10+1)]['x'] = Value
+                elif Param in ('21', '22', '23') :
+                    counter = max(counter, int(Param)%10+1)
+                    Current[str(int(Param)%10+1)]['y'] = Value
+                elif Param in ('40', '41') :
+                    Current['width'][str(int(Param)%10)] = Value
+                elif Param == '42':
+                    pass
+                elif (Param == '70' and
+                      int(Value) == 1 and
+                      Current['type'] == 'POLYLINE'):
+                    Current['closed'] = True
+                    
+                Param = dxf.readline()[1:-1]
+                Value = dxf.readline()[:-1]
+            else:
+                if Value == 'VERTEX':
+                    counter += 1
+                elif Current['type'] == 'POLYLINE':
+                    pass
+                elif Current['type'] == 'SOLID':
+                    pass
 
             Param = dxf.readline()[1:-1]
             Value = dxf.readline()[:-1]
-            # Ещё пока внутри ENTITIES считываются пары параметр-значение в конце итерации цикла
+            # Ещё пока внутри ENTITIES считываются пары параметр-значение
 
     dxf.close()
     return Stack
