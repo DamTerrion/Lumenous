@@ -81,7 +81,7 @@ def ndxf (dxf_name):
     except Exception:
         log = open ('bak/processed.log', 'a')
         log.write('\t'+
-                  'Error!'+'\t'
+                  'Error!'+'\t'+
                   full_name[-1]+'\t'+
                   full_name[:-1]+'\t'+
                   ctime(now())+'\n')
