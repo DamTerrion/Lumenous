@@ -1,4 +1,5 @@
 from os import replace, path, mkdir
+from time import ctime, time as now
 import clearing
 
 def ndxf (dxf_name):
@@ -48,7 +49,7 @@ def ndxf (dxf_name):
             Value = dxf.readline()
             
             if Param == '  0\n' :       # Если встречается код 0, значит, начался объект,
-                inObject = Value[:-1]   # и требуется определить и сохранить тип объекта
+                inObject = Value[:-1]   #  и требуется определить и сохранить тип объекта
 
             if (inObject in Allowed and
                 (Param[1:-1] in Allowed['_INIT_'] or
@@ -61,24 +62,60 @@ def ndxf (dxf_name):
             
     dxf.close()
     if path.exists('bak') == False :
-        mkdir ('bak')      
-    replace (dxf_name, 'bak/'+dxf_name+'.bak')
+        mkdir ('bak')
+    full_name = path.split(os.path.abspath(dxf_name))
+    try: replace (dxf_name, 'bak/'+full_name[-1]+'.bak')
+    except Exception:
+        replace (dxf_name, dxf_name+'.bak')
+        print ("Can't replace file to '/bak'!")
     # Обрабатывавшийся файл <name>.dxf превращается в bak/<name>.dxf.bak
+    # Если произошла ошибка (невозможно файл переместить в папку bak/),
+    #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    # Так как имя исходного файла сменилось, создаётся новый файл с исходным именем
-    dxf = open (dxf_name, 'w')    
-    dxf.write(new)
-    dxf.close()
-    print ('Well done!')
-    # Запись в файл завершена, файлы закрыты, процедура завершена. EOF
+    # Так как имя исходного файла сменилось, он создаётся заново
+    try:
+        dxf = open (dxf_name, 'w')    
+        dxf.write(new)
+        dxf.close()
+        # Попытка записи в файл с перехватом ошибок
+    except Exception:
+        log = open ('bak/processed.log', 'a')
+        log.write('\t'+
+                  'Error!'+'\t'
+                  full_name[-1]+'\t'+
+                  full_name[:-1]+'\t'+
+                  ctime(now())+'\n')
+        log.close()
+        print ('\t'+'Возникла ошибка при обработке.')
+        # Если возникла ошибка, то сообщение об этом выводится в лог
+    else:
+        log = open ('bak/processed.log', 'a')
+        log.write(full_name[-1]+'\t'+
+                  full_name[:-1]+'\t'+
+                  ctime(now())+'\n')
+        log.close()
+        print ('\t'+'Всё отлично!')
+        # Если не возникло ошибок, в лог выводится информация об обработке
     
-code = ''
-clearing.bak(45)
-# Подчистка мусора - удаляются все bak-файлы старше 45 дней
+
+need_clear = input ('Произвести чистку? (Да/Нет/Срок): ')
+# Подчистка мусора на выбор пользователя
+if need_clear.isdigit():
+    clearing.bak(int(need_clear))
+    print ('Произведена чистка файлов старше',need_clear,'дней.')
+elif need_clear.lower() in ('да', 'д', 'y'):
+    clearing.bak(45)
+    print ('Произведена чистка файлов старше 45 дней.')    
+elif need_clear.lower() in ('нет', 'н', 'n'):
+    print ('Хорошо. Чистка отменена')
+else:
+    print ('Ответ не ясен. Ничего не сделано')
 
 while True :
-    code = input("Введите имя DXF-файла для обработки: ")
+    code = input ("Введите имя DXF-файла для обработки: ")
     if code in ('quit', 'exit', 'выход', 'конец') : break
-    ndxf (code)
+    try: ndxf (code)
+    except Exception: print ('Произошла ошибка.')
+        
     # Цикл повторяется до тех пор, пока в качестве имени файла
-    # не будет указано ключевое слово: "exit", "quit", "выход" или "конец"
+    #  не будет указано ключевое слово: "exit", "quit", "выход" или "конец"
