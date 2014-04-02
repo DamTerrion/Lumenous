@@ -63,11 +63,12 @@ def ndxf (dxf_name):
     dxf.close()
     if path.exists('bak') == False :
         mkdir ('bak')
-    full_name = path.split(os.path.abspath(dxf_name))
-    try: replace (dxf_name, 'bak/'+full_name[-1]+'.bak')
-    except Exception:
-        replace (dxf_name, dxf_name+'.bak')
-        print ("Can't replace file to '/bak'!")
+    full_name = path.split(path.abspath(dxf_name))
+    #try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
+    #except Exception:
+    #    replace (dxf_name, dxf_name+'.bak')
+    #    print ("Can't replace file to '/bak'!")
+    replace (dxf_name, 'bak/'+dxf_name+'.bak')
     # Обрабатывавшийся файл <name>.dxf превращается в bak/<name>.dxf.bak
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
@@ -82,19 +83,19 @@ def ndxf (dxf_name):
         log = open ('bak/processed.log', 'a')
         log.write('\t'+
                   'Error!'+'\t'+
-                  full_name[-1]+'\t'+
-                  full_name[:-1]+'\t'+
+                  full_name[1]+'\t|\t'+
+                  full_name[0]+'\t|\t'+
                   ctime(now())+'\n')
         log.close()
-        print ('\t'+'Возникла ошибка при обработке.')
+        print ('    Возникла ошибка при обработке.')
         # Если возникла ошибка, то сообщение об этом выводится в лог
     else:
         log = open ('bak/processed.log', 'a')
-        log.write(full_name[-1]+'\t'+
-                  full_name[:-1]+'\t'+
+        log.write(full_name[1]+'\t|\t'+
+                  full_name[0]+'\t|\t'+
                   ctime(now())+'\n')
         log.close()
-        print ('\t'+'Всё отлично!')
+        print ('    Всё отлично!')
         # Если не возникло ошибок, в лог выводится информация об обработке
     
 
