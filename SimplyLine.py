@@ -25,7 +25,7 @@ class Line (object):
         self.sin = sin(self.rad)
 
         self.xy = complex (self.x, self.y)
-        self.lw = complex (self.l, self.w)
+        self.lw = complex (self.w, self.l)
         self.ac = complex (self.cos,
                            self.sin)
 
@@ -44,8 +44,19 @@ class Line (object):
         return {'Correct': Correct, 'Error': Errors }
 
     def coords (self):
-        A = self.lw.real
-        B = self.lw - A
+        va = self.ac * ( self.lw.real )
+        vb = self.ac * ( self.lw - va )
+        
+        return {'A': self.xy + va,
+                'B': self.xy + vb,
+                'C': self.xy - va,
+                'D': self.xy - vb,
+                
+                '1': self.xy - va - vb,
+                '2': self.xy + va - vb,
+                '3': self.xy - va + vb,
+                '4': self.xy + va - vb
+                }
 
     def pat (self, size, reverse):
 
@@ -88,14 +99,13 @@ class Line (object):
                         'A'+str(a)+';\n') }
         
     def polyline (self):
-        l = { 'x': self.l * self.cos,
-              'y': self.l * self.sin }
+        coord = self.coords()
+        
+        A = {'x': coord['A'].real
+             'y': coord['A'].imag }
               
-        p1 = {'x': self.x - l['x'],
-              'y': self.y - l['y'] }
-              
-        p2 = {'x': self.x + l['x'],
-              'y': self.y + l['y'] }
+        C = {'x': coord['C'].real
+             'y': coord['C'].imag }
               
         out = ( '  0\nPOLYLINE\n'+
                 '  8\n'+self.layer+'\n'+
@@ -104,39 +114,35 @@ class Line (object):
                 ' 41\n'+self.ws+'\n'+
                 '  0\nVERTEX\n'+
                 '  8\n'+self.layer+'\n'+
-                ' 10\n'+str(p1['x']/1000)+'\n'+
-                ' 20\n'+str(p1['y']/1000)+'\n'+
+                ' 10\n'+str(C['x']/1000)+'\n'+
+                ' 20\n'+str(C['y']/1000)+'\n'+
                 ' 30\n0.0\n'+
                 '  0\nVERTEX\n'+
                 '  8\n'+self.layer+'\n'+
-                ' 10\n'+str(p2['x']/1000)+'\n'+
-                ' 20\n'+str(p2['y']/1000)+'\n'+
+                ' 10\n'+str(A['x']/1000)+'\n'+
+                ' 20\n'+str(A['y']/1000)+'\n'+
                 ' 30\n0.0\n'+
                 '  0\nSEQEND\n'+
                 '  8\n'+self.layer+'\n' )
                 
         return {'out': out,
-                '1': p1, '2': p2,
+                '1': C, '2': A,
                 'Error': False }
         
     def rectangle (self):
-        l = { 'x': self.l * self.cos,
-              'y': self.l * self.sin }
+        coord = self.coords()
         
-        w = { 'x': self.w * self.sin,
-              'y': self.w * self.cos }
+        p1 = {'x': coord['1'].real,
+              'y': coord['1'].imag }
         
-        p1 = {'x': self.x - l['x'] + w['x'],
-              'y': self.y - l['y'] + w['y'] }
+        p2 = {'x': coord['2'].real,
+              'y': coord['2'].imag }
         
-        p2 = {'x': self.x + l['x'] + w['x'],
-              'y': self.y + l['y'] + w['y'] }
+        p3 = {'x': coord['4'].real,
+              'y': coord['4'].imag }
         
-        p3 = {'x': self.x + l['x'] - w['x'],
-              'y': self.y + l['y'] - w['y'] }
-        
-        p4 = {'x': self.x - l['x'] - w['x'],
-              'y': self.y - l['y'] - w['y'] }
+        p4 = {'x': coord['3'].real,
+              'y': coord['3'].imag }
         
         out = ( '  0\nPOLYLINE\n'+
                 '  8\n'+self.layer+'\n'+
@@ -173,11 +179,19 @@ class Line (object):
                 'Error': False }
         
     def solid (self):
-        coord = self.rectangle()
-        p1 = coord['1']
-        p2 = coord['2']
-        p3 = coord['4']
-        p4 = coord['3']
+        coord = self.coords()
+        
+        p1 = {'x': coord['1'].real,
+              'y': coord['1'].imag }
+        
+        p2 = {'x': coord['2'].real,
+              'y': coord['2'].imag }
+        
+        p3 = {'x': coord['3'].real,
+              'y': coord['3'].imag }
+        
+        p4 = {'x': coord['4'].real,
+              'y': coord['4'].imag }
         
         out = ( '  0\nSOLID\n'+
                 '  8\n'+self.layer+'\n'+
