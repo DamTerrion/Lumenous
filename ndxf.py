@@ -64,11 +64,11 @@ def ndxf (dxf_name):
     if path.exists('bak') == False :
         mkdir ('bak')
     full_name = path.split(path.abspath(dxf_name))
-    #try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
-    #except Exception:
-    #    replace (dxf_name, dxf_name+'.bak')
-    #    print ("Can't replace file to '/bak'!")
-    replace (dxf_name, 'bak/'+dxf_name+'.bak')
+    try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
+    except Exception:
+        replace (dxf_name, dxf_name+'.bak')
+        print ("Can't replace file to '/bak'!")
+    #replace (dxf_name, 'bak/'+dxf_name+'.bak')
     # Обрабатывавшийся файл <name>.dxf превращается в bak/<name>.dxf.bak
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
@@ -98,19 +98,39 @@ def ndxf (dxf_name):
         print ('    Всё отлично!')
         # Если не возникло ошибок, в лог выводится информация об обработке
     
+# ------------------------------ #
+#! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
 
-need_clear = input ('Произвести чистку? (Да/Нет/Срок): ')
+need_clear = input ('Произвести чистку? (Да/Нет/Срок) ')
 # Подчистка мусора на выбор пользователя
 if need_clear.isdigit():
-    clearing.bak(int(need_clear))
-    print ('Произведена чистка файлов старше',need_clear,'дней.')
-elif need_clear.lower() in ('да', 'д', 'y'):
+    if need_clear < 10:
+        # Защита от случайного ввода малых чисел с NumPad
+        sure = input ('Вы уверены? (Да/Нет) ')
+        if (sure.lower() in 'да' or
+            sure.lower() in 'yes'):
+            sure = True
+        else: sure = False
+    if sure:
+        clearing.bak(int(need_clear))
+        print ('Произведена чистка файлов старше',need_clear,'дней.')
+    
+elif (need_clear.lower() in 'да' or
+      need_clear.lower() in 'yes'):
+    # Если пользователь ответил положительно
     clearing.bak(45)
-    print ('Произведена чистка файлов старше 45 дней.')    
-elif need_clear.lower() in ('нет', 'н', 'n'):
+    print ('Произведена чистка файлов старше 45 дней.')
+    
+elif (need_clear.lower() in 'нет' or
+      need_clear.lower() in 'not'):
+    # Если пользователь ответил отрицательно
     print ('Хорошо. Чистка отменена')
+    
 else:
     print ('Ответ не ясен. Ничего не сделано')
+
+#! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
+# ------------------------------ #
 
 while True :
     code = input ("Введите имя DXF-файла для обработки: ")
