@@ -90,8 +90,10 @@ def ndxf (dxf_name):
         print ('    Возникла ошибка при обработке.')
         # Если возникла ошибка, то сообщение об этом выводится в лог
     else:
+        if len(full_name[1]) < 8: t = '\t\t'
+        else: t = '\t'
         log = open ('bak/processed.log', 'a')
-        log.write(full_name[1]+'\t|\t'+
+        log.write(full_name[1]+t+'|\t'+
                   full_name[0]+'\t|\t'+
                   ctime(now())+'\n')
         log.close()
