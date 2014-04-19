@@ -102,7 +102,31 @@ def dxf_read (dxf_name):
                     
                 elif Current['type'] == 'SOLID':
                     pass
-                    # Здесь должен быть код генерации объекта из фигуры
+                    prec = -3
+                    
+                    p1 = complex (Current['point']['0']['x'],
+                                  Current['point']['0']['y'])
+                    p2 = complex (Current['point']['1']['x'],
+                                  Current['point']['1']['y'])
+                    p3 = complex (Current['point']['2']['x'],
+                                  Current['point']['2']['y'])
+                    p4 = complex (Current['point']['3']['x'],
+                                  Current['point']['3']['y'])
+                    l1 = p1 - p2
+                    l2 = p3 - p4
+                    w1 = p1 - p3
+                    w2 = p2 - p4
+                    c = (p1 + p2 + p3 + p4) / 4
+                    if (abs(l1 - l2) < 10 ** prec and
+                        abs(w1 - w2) < 10 ** prec and
+                        l1.real/l1.imag - w1.imag/w1.real < 10 ** prec):
+                        x = c.real
+                        y = c.imag
+                        l = abs (l1)
+                        w = abs (w1)
+                        a = atan (l1.real/l1.imag)
+                        new = Line(x, y, l, w, a)
+                        Stack.append(new)
 
 
     dxf.close()
