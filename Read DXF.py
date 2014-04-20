@@ -106,7 +106,7 @@ def dxf_read (dxf_name):
             if Value != 'VERTEX':
                 # Если обрабатываемый объект не точка, значит - примитив
                 # Параметры примитива сохраняются в словарь:
-                Current = clear_object
+                Current = clear_objects()
                 Current['type'] = Value
             else:
                 # Если же объект - очередная точка, увеличим счётчик
