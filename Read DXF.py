@@ -1,3 +1,74 @@
+from math import atan2, degrees
+
+def clear_objects ():
+    return {
+        'type'  : None, # Тип объекта (линия, фигура)
+        'layer' : '0',  # Слой объекта
+        'points': {},   # Словарь точек со стороковыми именами
+        'vertex': 0,    # Счётчик точек полилинии - число
+        'width' : None, # Ширина полилинии
+        'closed': None  # Замкнутость полилинии
+        }
+precision = -4
+
+
+def by4points (rectangle, is_solid, prec=-4):
+    if is_solid:
+        p1 = rectangle['points']['0']
+        p2 = rectangle['points']['1']
+        p3 = rectangle['points']['2']
+        p4 = rectangle['points']['3']
+    else:
+        p1 = rectangle['points']['1']
+        p2 = rectangle['points']['2']
+        p3 = rectangle['points']['4']
+        p4 = rectangle['points']['3']
+    # В фигуре порядок точек не такой, как в прямоугольнике
+    # Чтобы это исправить, третья и четвёртая точки меняются местами
+    # Кроме того, отличается генерация имён точек (см. dxf_read дальше)
+    
+    l1, l2 = p1 - p2, p3 - p4
+    w1, w2 = p1 - p3, p2 - p4
+    c = (p1 + p2 + p3 + p4) / 4
+    if (abs(l1 - l2) < 10 ** prec and
+        abs(w1 - w2) < 10 ** prec and
+        l1.real/l1.imag - w1.imag/w1.real < 10 ** prec):
+        # Проверка координат на точность; сравнение с нулём малополезно,
+        #  потому что координаты всегда могут быть не очень точны
+        x = c.real * 1000
+        y = c.imag * 1000
+        l = abs (l1) * 1000
+        w = abs (w1) * 1000
+        a = degrees( atan2(l1.real, l1.imag) ) * 10
+        layer = rectangle['layer']
+        return Line(x, y, l, w, a, layer)
+        # формат Line хранит значения в мкм и 0.1 градуса
+
+def from_poly (polyline, prec=-4):
+    if not polyline['width']:
+        if ( polyline['vertex'] == 4 and
+             polyline['closed'] ):
+            return by4points(polyline, False, prec)
+        else: return False
+    sStack = []
+    prev = False
+    for point in sorted(polyline['points']):
+        if not prev:
+            prev = point
+            continue
+        c = (point + prev) / 2
+        v = point - prev
+        
+        x = c.real * 1000
+        y = c.imag * 1000
+        l = abs(v) * 1000
+        w = polyline['width']
+        a = degrees( atan2(v.real, v.imag) ) * 10
+        layer = polyline['layer']
+        sStack.append( Line(x, y, l, w, a, layer) )
+    return sStack
+
+
 def dxf_read (dxf_name):
     
     if dxf_name[-4:] != '.dxf' :
@@ -33,17 +104,13 @@ def dxf_read (dxf_name):
         # Цикл, продолжающийся до тех пор, пока не закончится раздел
         if Param == ' 0' and Value in Allowed_objects:
             if Value != 'VERTEX':
-                # Если обрабатываемый объект не точка, значит примитив
+                # Если обрабатываемый объект не точка, значит - примитив
                 # Параметры примитива сохраняются в словарь:
-                Current = {'type': Value,   # Тип объекта (линия, фигура)
-                           'layer': '0',    # Слой объекта
-                           'point': {},     # Словарь точек со стороковыми именами
-                           'vertex': 0,     # Счётчик точек полилинии - число
-                           'width': None,   # Ширина полилинии
-                           'closed': None   # Замкнутость полилинии
-                           }
+                Current = clear_object
+                Current['type'] = Value
             else:
-                # Если же объект - очередная точка, увеличим счётчик точек
+                # Если же объект - очередная точка, увеличим счётчик
+                # Это важно для записи точек полилинии и прямоугольника
                 Current['vertex'] += 1
             
             Param = dxf.readline()[1:-1]
@@ -54,17 +121,17 @@ def dxf_read (dxf_name):
                 
                 elif Param in ('10', '11', '12', '13') :
                     num = str(int(Param)%10+Current['vertex'])
-                    if not num in Current['point']:
-                        Current['point'][num] = {}
-                    Current['point'][num]['x'] = Value
+                    if not num in Current['points']:
+                        Current['points'][num] = {}
+                    Current['points'][num]['x'] = Value
                     # Берётся значение координаты X точки
                     # Если точки с текущим именем не было, она создаётся
                     
                 elif Param in ('20', '21', '22', '23') :
                     num = str(int(Param)%10+Current['vertex'])
-                    if not num in Current['point']:
-                        Current['point'][num] = {}
-                    Current['point'][num]['y'] = Value
+                    if not num in Current['points']:
+                        Current['points'][num] = {}
+                    Current['points'][num]['y'] = Value
                     # Аналогично берётся значение Y точки
                     # Для фигуры точки будут '0', '1', '2', '3'
                     # Для полилинии точки будут '1', '2', '3', ...
@@ -85,49 +152,28 @@ def dxf_read (dxf_name):
                     pass
                     # Здесь должен быть код, определяющий обработку дуги
                     
-                elif (Param == '70' and
-                      int(Value) == 1 and
-                      Current['type'] == 'POLYLINE'):
+                elif all(Param == '70', int(Value) == 1,
+                         Current['type'] == 'POLYLINE'):
                     Current['closed'] = True
                     # Это значит, что была принята замкнутая полилиния
-                    # Важно, т.к. замкнутая линия может быть прямоугольником
+                    # Важно: замкнутая линия может быть прямоугольником
+                    # А прямоугольник обрабатывается почти как фигура
                     
                 Param = dxf.readline()[1:-1]
                 Value = dxf.readline()[:-1]
             else:
                 if Current['type'] == 'POLYLINE' and Value == 'SEQEND':
-                    pass 
-                    # Здесь должен быть код генерации объекта из полилинии
-                    # ВКЛЮЧАЯ ДУГИ И ПРЯМОУГОЛЬНИКИ!
+                    new = from_poly(Current, precision)
+                    if new: Stack.extend(new)
+                    # Полилиния может содержать несколько объектов
+                    # Поэтому функция from_poly возращает стек,
+                    #  за счёт которого общий стек расширяется
                     
                 elif Current['type'] == 'SOLID':
-                    pass
-                    prec = -3
-                    
-                    p1 = complex (Current['point']['0']['x'],
-                                  Current['point']['0']['y'])
-                    p2 = complex (Current['point']['1']['x'],
-                                  Current['point']['1']['y'])
-                    p3 = complex (Current['point']['2']['x'],
-                                  Current['point']['2']['y'])
-                    p4 = complex (Current['point']['3']['x'],
-                                  Current['point']['3']['y'])
-                    l1 = p1 - p2
-                    l2 = p3 - p4
-                    w1 = p1 - p3
-                    w2 = p2 - p4
-                    c = (p1 + p2 + p3 + p4) / 4
-                    if (abs(l1 - l2) < 10 ** prec and
-                        abs(w1 - w2) < 10 ** prec and
-                        l1.real/l1.imag - w1.imag/w1.real < 10 ** prec):
-                        x = c.real
-                        y = c.imag
-                        l = abs (l1)
-                        w = abs (w1)
-                        a = atan (l1.real/l1.imag)
-                        new = Line(x, y, l, w, a)
-                        Stack.append(new)
-
+                    new = by4points(Current, True, precision)
+                    if new: Stack.append(new)
+                    # Фигура содержит только один объект
+                    # Его можно просто добавить в общий стэк
 
     dxf.close()
     return Stack
