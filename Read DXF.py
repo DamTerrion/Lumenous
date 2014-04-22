@@ -8,11 +8,12 @@ def clear_objects ():
         'vertex': 0,    # Счётчик точек полилинии - число
         'width' : None, # Ширина полилинии
         'closed': None  # Замкнутость полилинии
+        'colour': None  # Цвет объекта, если он задан явно
         }
 precision = -4
 
 
-def by4points (rectangle, is_solid, prec=-4):
+def by4points (rectangle, is_solid, precision=-4):
     if is_solid:
         p1 = rectangle['points']['0']
         p2 = rectangle['points']['1']
@@ -30,9 +31,9 @@ def by4points (rectangle, is_solid, prec=-4):
     l1, l2 = p1 - p2, p3 - p4
     w1, w2 = p1 - p3, p2 - p4
     c = (p1 + p2 + p3 + p4) / 4
-    if (abs(l1 - l2) < 10 ** prec and
-        abs(w1 - w2) < 10 ** prec and
-        l1.real/l1.imag - w1.imag/w1.real < 10 ** prec):
+    if all( abs(l1 - l2) < 10 ** precision,
+            abs(w1 - w2) < 10 ** precision,
+            l1.real/l1.imag - w1.imag/w1.real < 10 ** precision ):
         # Проверка координат на точность; сравнение с нулём малополезно,
         #  потому что координаты всегда могут быть не очень точны
         x = c.real * 1000
@@ -43,12 +44,14 @@ def by4points (rectangle, is_solid, prec=-4):
         layer = rectangle['layer']
         return Line(x, y, l, w, a, layer)
         # формат Line хранит значения в мкм и 0.1 градуса
+    else: return False
 
-def from_poly (polyline, prec=-4):
+def from_poly (polyline, precision=-4):
     if not polyline['width']:
         if ( polyline['vertex'] == 4 and
              polyline['closed'] ):
-            return by4points(polyline, False, prec)
+            return [by4points(polyline, False, precision)]
+            # from_poly, в отличие от by4points должна вернуть список
         else: return False
     sStack = []
     prev = False
@@ -58,6 +61,8 @@ def from_poly (polyline, prec=-4):
             continue
         c = (point + prev) / 2
         v = point - prev
+        if abs(v) < 10 ** precision : continue
+        # Если точки совпадают, то их пара не обрабатывается
         
         x = c.real * 1000
         y = c.imag * 1000
@@ -67,6 +72,22 @@ def from_poly (polyline, prec=-4):
         layer = polyline['layer']
         sStack.append( Line(x, y, l, w, a, layer) )
     return sStack
+    # Важно! Функция возвращает не один объект, а список объектов
+
+def to_pat (stack, precision=-4):
+    Result = []
+    for item in stack:
+        if item['type'] == 'POLYLINE':
+            new = from_poly(item, precision)
+            if new: Result.extend(new)
+            # Полилиния может содержать несколько объектов
+            # Поэтому функция from_poly возращает список,
+            #  за счёт которого общий стек расширяется
+        elif item['type'] == 'SOLID':
+            new = by4points(item, True, precision)
+            if new: Result.append(new)
+            # Фигура содержит только один объект
+            # Его можно просто добавить в общий стэк
 
 
 def dxf_read (dxf_name):
@@ -104,14 +125,16 @@ def dxf_read (dxf_name):
         # Цикл, продолжающийся до тех пор, пока не закончится раздел
         if Param == ' 0' and Value in Allowed_objects:
             if Value != 'VERTEX':
-                # Если обрабатываемый объект не точка, значит - примитив
-                # Параметры примитива сохраняются в словарь:
+                # Если обрабатываемый объект не точка,
+                #  необходимо сохранить предыдущий примитив.
+                Stack.append(Current)
+                # Так же нужно инициировать запись нового объекта
                 Current = clear_objects()
                 Current['type'] = Value
             else:
+                Current['vertex'] += 1
                 # Если же объект - очередная точка, увеличим счётчик
                 # Это важно для записи точек полилинии и прямоугольника
-                Current['vertex'] += 1
             
             Param = dxf.readline()[1:-1]
             Value = dxf.readline()[:-1]
@@ -161,20 +184,8 @@ def dxf_read (dxf_name):
                     
                 Param = dxf.readline()[1:-1]
                 Value = dxf.readline()[:-1]
-            else:
-                if Current['type'] == 'POLYLINE' and Value == 'SEQEND':
-                    new = from_poly(Current, precision)
-                    if new: Stack.extend(new)
-                    # Полилиния может содержать несколько объектов
-                    # Поэтому функция from_poly возращает стек,
-                    #  за счёт которого общий стек расширяется
-                    
-                elif Current['type'] == 'SOLID':
-                    new = by4points(Current, True, precision)
-                    if new: Stack.append(new)
-                    # Фигура содержит только один объект
-                    # Его можно просто добавить в общий стэк
-
+            # Цикл обработки объекта завершается здесь.
+    
     dxf.close()
     return Stack
     print ('Done!')
