@@ -83,7 +83,7 @@ def to_Line (stack, precision=-4):
             new = from_poly(item, precision)
             if new:
                 Result.extend(new)
-                print (new)
+                print (item)
             # Полилиния может содержать несколько объектов
             # Поэтому функция from_poly возращает список,
             #  за счёт которого общий стек расширяется
@@ -91,23 +91,21 @@ def to_Line (stack, precision=-4):
             new = by4points(item, True, precision)
             if new:
                 Result.append(new)
-                print (new)
+                print (item)
             # Фигура содержит только один объект
             # Его можно просто добавить в общий стэк
     return Result
 
-def to_pat (stack):
+def to_pat (stack, size, reverse):
     Result = ''
     for item in stack:
-        new = item.pat()
+        new = item.pat(size, reverse)
         if not 'Error' in new:
             Result += new['out']
     return Result
 
 
-def dxf_read (dxf_name=False):
-    listened_dxf = ''
-    
+def dxf_read (dxf_name=False):    
     if not dxf_name:
         dxf_name = input ('Введите имя файла: ')
     
@@ -147,7 +145,7 @@ def dxf_read (dxf_name=False):
             if Value != 'VERTEX':
                 # Если обрабатываемый объект не точка,
                 #  необходимо сохранить предыдущий примитив.
-                try: Stack.append(Current)
+                try: Stack.append(Current), print (Current)
                 except UnboundLocalError: pass
                 # Так же нужно инициировать запись нового объекта
                 Current = clear_objects()
@@ -217,15 +215,7 @@ def dxf_read (dxf_name=False):
     dxf.close()
     return Stack
 # Здесь кончается функция read_dxf
-    
+
+
 if __name__ == '__main__':
-    name = input('Имя файла: ')
-    first = dxf_read(name)
-    print (first)
-    second = to_Line(first)
-    print (second)
-    third = to_pat(second)
-    print (second)
-    pat = open (name+'.pat', 'w')
-    pat.write(third)
-    pat.close()
+    dxf_read()
