@@ -1,5 +1,5 @@
 from math import atan2, degrees
-from SimpleLine import Line
+from SimpleLine import *
 
 def clear_objects ():
     return {
@@ -43,7 +43,9 @@ def by4points (rectangle, is_solid, precision=-4):
         w = abs (w1) * 1000
         a = degrees( atan2(l1.real, l1.imag) ) * 10
         layer = rectangle['layer']
-        return Line(x, y, l, w, a, layer)
+        origin = rectangle['type']
+        colour = rectangle['colour']
+        return Line(x, y, l, w, a, layer, origin, colour)
         # формат Line хранит значения в мкм и 0.1 градуса
     else: return False
 
@@ -54,7 +56,7 @@ def from_poly (polyline, precision=-4):
             return [by4points(polyline, False, precision)]
             # from_poly, в отличие от by4points должна вернуть список
         else: return False
-    sStack = []
+    sStack = LStack()
     prev = False
     for point in sorted(polyline['points']):
         last = polyline['points'][point]
@@ -72,17 +74,19 @@ def from_poly (polyline, precision=-4):
         w = polyline['width']
         a = degrees( atan2(v.real, v.imag) ) * 10
         layer = polyline['layer']
-        sStack.append( Line(x, y, l, w, a, layer) )
+        origin = polyline['type']
+        colour = polyline['colour']
+        sStack.add( Line(x, y, l, w, a, layer, origin, colour) )
     return sStack
     # Важно! Функция возвращает не один объект, а список объектов
 
 def to_Line (stack, precision=-4):
-    Result = []
+    Result = LStack()
     for item in stack:
         if item['type'] == 'POLYLINE':
             new = from_poly(item, precision)
             if new:
-                Result.extend(new)
+                Result.add(new)
                 print (item)
             # Полилиния может содержать несколько объектов
             # Поэтому функция from_poly возращает список,
@@ -90,19 +94,16 @@ def to_Line (stack, precision=-4):
         elif item['type'] == 'SOLID':
             new = by4points(item, True, precision)
             if new:
-                Result.append(new)
+                Result.add(new)
                 print (item)
             # Фигура содержит только один объект
             # Его можно просто добавить в общий стэк
     return Result
 
-def to_pat (stack, size, reverse):
-    Result = ''
-    for item in stack:
-        new = item.pat(size, reverse)
-        if not 'Error' in new:
-            Result += new['out']
-    return Result
+def do_pat (stack_of_lines, size, reverse):
+    return stack_of_lines.generate('pat', [size, reverse])
+    # Очень простая функция, превращающая список в пат-код
+    # Использует встроенный метод класса списка линий
 
 
 def dxf_read (dxf_name=False):    
@@ -193,6 +194,14 @@ def dxf_read (dxf_name=False):
                 elif Param == 42:
                     pass
                     # Здесь должен быть код, определяющий обработку дуги
+
+                elif Param == 62:
+                    Current['colour'] = int(Value)
+                    # Код 62 отвечает за цвет объекта
+                    # 1 или  10 - красный,  2 или  50 - жёлтый
+                    # 3 или  90 - зелёный,  4 или 130 - голубой
+                    # 5 или 170 - синий,    6 или 210 - фиолетовый
+                    # 7 - белый/чёрный
                     
                 elif (Param == 70 and int(Value) == 1 and
                       Current['type'] == 'POLYLINE'):
