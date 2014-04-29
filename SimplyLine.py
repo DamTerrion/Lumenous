@@ -21,30 +21,34 @@ class Line (object):
         self.ar = round(angle)
         self.rad = radians(angle / 10)
         
-        self.layer = str(layer)
-        self.colour = colour
-        self.orig = origin
         self.cos = cos(self.rad)
         self.sin = sin(self.rad)
+        
+        self.layer  = str(layer)
+        self.colour = str(colour)
+        self.origin = str(origin)
         
         self.xy = complex (self.x, self.y)
         self.lw = complex (self.w, self.l)
         self.ac = complex (self.cos,
                            self.sin)
     
-    def check (self, size=False):
-        Correct, Errors = True, []
+    def check (self, size=102):
+        Correct_code = 1
         
-        if size :
-            if self.x >= size : Errors.append('Too Large X')
-            if self.y >= size : Errors.append('Too Large Y')
-        if self.x <= 0 : Errors.append('Negative X')
-        if self.y <= 0 : Errors.append('Negative Y')
-        if self.l <= 0 : Errors.append('Zero Lenght')
-        if self.w <= 0 : Errors.append('Zero Width')
+        if size == 102:
+            Rang1 = (0, 102)
+            Rang2 = (51-40, 51+40)
+        if size == 127:
+            Rang1 = (0, 127)
+            Rang2 = (63.5-50, 63.5+50)
         
-        if len(Errors): Correct = False
-        return {'Correct': Correct, 'Error': Errors }
+        if (self.x%1 > 0.1 or self.y%1 > 0.1):
+            Correct_code = 2
+        if (self.x%0.25 > 0.1 or self.y%0.25 > 0.1):
+            Correct_code = 3
+        
+        return { 'Correct': Correct }
     
     def coords (self):
         va = self.ac * ( self.lw.real )
@@ -63,7 +67,8 @@ class Line (object):
 
     def colour_string (self):
         if self.colour:
-            return str(' 62\n'+
+            return ' 62\n{:>6}\n'.format(self.colour)
+        return ''
     
     def pat (self, size=102, reverse=False):
         
@@ -110,7 +115,8 @@ class Line (object):
         
         return (' 0\nPOLYLINE\n'+
                 ' 8\n'+self.layer+'\n'+
-                ' 66\n1\n'+
+                colour_string()+
+                ' 66\n     1\n'+
                 ' 40\n'+self.ws+'\n'+
                 ' 41\n'+self.ws+'\n'+
                 ' 0\nVERTEX\n'+
@@ -143,7 +149,8 @@ class Line (object):
         
         return ('  0\nPOLYLINE\n'+
                 '  8\n'+self.layer+'\n'+
-                ' 66\n1\n'+
+                colour_string()+
+                ' 66\n     1\n'+
                 ' 40\n0.0\n'+
                 ' 41\n0.0\n'+
                 ' 70\n1\n'+
@@ -187,6 +194,7 @@ class Line (object):
 
         return ('  0\nSOLID\n'+
                 '  8\n'+self.layer+'\n'+
+                colour_string()+
                 ' 10\n'+str(p1['x']/1000)+'\n'+
                 ' 20\n'+str(p1['y']/1000)+'\n'+
                 ' 30\n0.0\n'+
@@ -261,3 +269,23 @@ class LStack (list):
                 result[item.layer] = LStack()
             result[item.layer].add(item)
         return result
+    
+    def data_file (self, name=data):
+        result = name+' = {\n'
+        space = ' '*4
+        for item in self:
+            result += (space + 'Line( '+
+                       str(self.x)+', '+
+                       str(self.y)+', '+
+                       str(self.l)+', '+
+                       str(self.w)+', '+
+                       str(self.a)+', '+
+                       self.layer +', '+
+                       self.origin+', '+
+                       self.colour+')\n')
+        result += space + '}\n'
+        return result
+    
+    def check (self, size):
+        for item in self:
+            
