@@ -31,18 +31,24 @@ def read (dxf_name=False):
     return data
 
 def get_data (dxf_file):
-    data = dxf_file.read()
-    data_stack = []
+    data = []
+    for line in dxf_file:
+        data.append(line)
+    stack = []
     even = True
-    for i in range(0, len(data), 2):
+    for i in range(0, len(data)-1):
+        print (i, even, i%2)
         if even != i%2:
             couple = get_couple(data, i)
-            if couple: data_stack.append(couple)
+            print (couple)
+            if couple: stack.append(couple)
             else: even = not even
-    return data_stack
+    print (stack)
+    return stack
 
 def get_couple (data, i):
     marker = data[i].strip()
+    print (marker)
     if marker.isdigit():
         marker = int(marker)
         value = data[i+1].strip()
