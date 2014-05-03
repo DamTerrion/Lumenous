@@ -96,37 +96,40 @@ def check_value (marker, value):
         return False
     else: return value
 
-def do_params_list (data, name='', i=0, break_condition=(0, 'EOF')):
+def do_params_list (data, name=False, i=0, break_condition=(0, 'EOF')):
     stack = (name, [])
     while i < len(data)-1:
-        print (i, data[i])
         if ( data[i] == break_condition or
             (data[i][0], 'ANY') == break_condition):
             return stack, i
         elif data[i] == (0, 'SECTION'):
-            print ('Do section:', data[i+1][1])
             result, i = do_params_list (data, data[i+1][1], i+2, (0, 'ENDSEC'))
         elif data[i][0] == 0:
-            print ('Do object:', data[i][1])
             result, i = do_params_list (data, data[i][1], i+1, (0, 'ANY'))
         else:
+            if data[i] == (66, 1):
+                break_condition = (0, 'SEQEND')
             result = data[i]
             i += 1
         stack[1].append(result)
-    return stack, i+1
+    if name: return stack, i+1
+    else: return stack[1]
 
 def print_stack (stack, spaces=''):
+    result = []
     for item in stack:
-        if (type(item) == tuple or
-            type(item) == list):
-            for sitem in item:
-                print_stack (sitem, spaces+'  ')
+        if type(item) == tuple:
+            result.extend(print_stack (item, spaces+'  '))
+        elif type(item) == list:
+            result.extend(print_stack (item, spaces+''))
         else:
-            print (spaces, item)
+            result.append(spaces+str(item)+'\n')
+    return result
 
 if __name__ == '__main__':
-    readed = read('test')
-    print (readed,'\n')
-    stack, counter = do_params_list(readed)
-    print ('')
-    print_stack (stack)
+    readed = read('Stuffs/FQ.dxf')
+    data = do_params_list(readed)
+    new_file = open ('Stuffs/result.txt', 'w')
+    new_file.write(''.join(print_stack(data)))
+    new_file.close()
+    print ('Готово!')
