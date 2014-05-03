@@ -1,4 +1,5 @@
 from math import atan2, degrees
+from os.path import exists
 from SimplyLine import *
 
 precision = -4
@@ -14,18 +15,26 @@ def clear_object ():
         'closed': None          # Замкнутость полилинии
         }
 
-def read (dxf_name=False):
+def open_file (dxf_name=False):
     if not dxf_name:
         dxf_name = input ('Введите имя файла: ')
-    
-    if dxf_name[-4:] != '.dxf' :
-        dxf_name += '.dxf'
-    
-    try:
-        dxf_file = open (dxf_name, 'r')
-    except FileNotFoundError:
-        print ('Файл не найден.')
+    if exists(dxf_name):
+        answer = input ('Подтверждается '+dxf_name+'? ')
+        if any(answer.lower() in item for item in ('да', 'yes', 'верно')):
+            return open (dxf_name, 'r')
+        else: return False
+    elif exists(dxf_name+'.dxf'):
+        answer = input ('Подтверждается '+dxf_name+'.dxf? ')
+        if any(answer.lower() in item for item in ('да', 'yes', 'верно')):
+            return open (dxf_name+'.dxf', 'r')
+    else:
+        print ('Файл не обнаружен.')
         return False
+
+def read (dxf_name=False):
+    dxf_file = open_file(dxf_name)
+    while not dxf_file:
+        dxf_file = open_file(False)
     data = get_data(dxf_file)
     dxf_file.close()
     return data
@@ -37,24 +46,87 @@ def get_data (dxf_file):
     stack = []
     even = True
     for i in range(0, len(data)-1):
-        print (i, even, i%2)
         if even != i%2:
             couple = get_couple(data, i)
-            print (couple)
             if couple: stack.append(couple)
             else: even = not even
-    print (stack)
     return stack
 
 def get_couple (data, i):
-    marker = data[i].strip()
-    print (marker)
-    if marker.isdigit():
-        marker = int(marker)
-        value = data[i+1].strip()
-        return (marker, value)
+    A, B = data[i], data[i+1]
+    try: C = data[i+2]
+    except IndexError: C = '123\n'
+    
+    if check_marker (A):
+        if check_marker (C):
+            if not check_value (A, B) is False:
+                return couple (A, B)
+            else: return False
+            
+        else:
+            if not check_marker (B):
+                return couple (A, B)
+            else: return False
+            
     else: return False
 
-def print_stack():
-    stack = read()
-    if stack: print (stack)
+def couple (A, B):
+    marker = int(A.strip())
+    value = check_value (A, B)
+    return (marker, value)
+
+def check_marker (marker):
+    try:
+        assert len(marker) == 4
+        assert marker.strip().isdigit()
+    except AssertionError:
+        return False
+    else: return True
+
+def check_value (marker, value):
+    marker = int(marker.strip())
+    try:
+        if marker in range (0, 10):
+            value = str(value.strip())
+        elif marker in range (10, 60):
+            value = float(value.strip())
+        elif marker in range (60, 80):
+            value = int(value.strip())
+    except ValueError:
+        return False
+    else: return value
+
+def do_params_list (data, name='', i=0, break_condition=(0, 'EOF')):
+    stack = (name, [])
+    while i < len(data)-1:
+        print (i, data[i])
+        if ( data[i] == break_condition or
+            (data[i][0], 'ANY') == break_condition):
+            return stack, i
+        elif data[i] == (0, 'SECTION'):
+            print ('Do section:', data[i+1][1])
+            result, i = do_params_list (data, data[i+1][1], i+2, (0, 'ENDSEC'))
+        elif data[i][0] == 0:
+            print ('Do object:', data[i][1])
+            result, i = do_params_list (data, data[i][1], i+1, (0, 'ANY'))
+        else:
+            result = data[i]
+            i += 1
+        stack[1].append(result)
+    return stack, i+1
+
+def print_stack (stack, spaces=''):
+    for item in stack:
+        if (type(item) == tuple or
+            type(item) == list):
+            for sitem in item:
+                print_stack (sitem, spaces+'  ')
+        else:
+            print (spaces, item)
+
+if __name__ == '__main__':
+    readed = read('test')
+    print (readed,'\n')
+    stack, counter = do_params_list(readed)
+    print ('')
+    print_stack (stack)
