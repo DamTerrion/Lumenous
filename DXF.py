@@ -52,30 +52,14 @@ def get_data (dxf_file):
             else: even = not even
     return stack
 
-def get_couple (data, i):
-    A, B = data[i], data[i+1]
-    try: C = data[i+2]
-    except IndexError: C = '123\n'
-    
-    if check_marker (A):
-        if check_marker (C):
-            if not check_value (A, B) is False:
-                return couple (A, B)
-            else: return False
-            
-        else:
-            if not check_marker (B):
-                return couple (A, B)
-            else: return False
-            
-    else: return False
-
 def couple (A, B):
+    
     marker = int(A.strip())
     value = check_value (A, B)
     return (marker, value)
 
 def check_marker (marker):
+    
     try:
         assert len(marker) == 4
         assert marker.strip().isdigit()
@@ -96,16 +80,34 @@ def check_value (marker, value):
         return False
     else: return value
 
-def do_params_list (data, name=False, i=0, break_condition=(0, 'EOF')):
+def get_couple (data, i):
+  
+    A, B = data[i], data[i+1]
+    try: C = data[i+2]
+    except IndexError: C = '123\n'
+    
+    if check_marker (A):
+        if check_marker (C):
+            if not check_value (A, B) is False:
+                return couple (A, B)
+            else: return False
+        else:
+            if not check_marker (B):
+                return couple (A, B)
+            else: return False
+    else: return False
+    
+
+def data_list (data, name=False, i=0, break_condition=(0, 'EOF')):
     stack = (name, [])
     while i < len(data)-1:
         if ( data[i] == break_condition or
             (data[i][0], 'ANY') == break_condition):
             return stack, i
         elif data[i] == (0, 'SECTION'):
-            result, i = do_params_list (data, data[i+1][1], i+2, (0, 'ENDSEC'))
+            result, i = data_list (data, data[i+1][1], i+2, (0, 'ENDSEC'))
         elif data[i][0] == 0:
-            result, i = do_params_list (data, data[i][1], i+1, (0, 'ANY'))
+            result, i = data_list (data, data[i][1], i+1, (0, 'ANY'))
         else:
             if data[i] == (66, 1):
                 break_condition = (0, 'SEQEND')
@@ -126,10 +128,23 @@ def print_stack (stack, spaces=''):
             result.append(spaces+str(item)+'\n')
     return result
 
+def get_object (data, name):
+    stack = []
+    for item in data:
+        if item[0] == name:
+            stack.append(item)
+    if len(stack) == 0:
+        return False
+    if len(stack) == 1:
+        return stack[0]
+    return stack
+
 if __name__ == '__main__':
     readed = read('Stuffs/FQ.dxf')
-    data = do_params_list(readed)
+    data = data_list(readed)
+    entities = get_object(data, 'ENTITIES')
+    for_print = print_stack(entities)
     new_file = open ('Stuffs/result.txt', 'w')
-    new_file.write(''.join(print_stack(data)))
+    new_file.write(''.join(for_print))
     new_file.close()
     print ('Готово!')
