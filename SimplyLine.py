@@ -210,11 +210,11 @@ class Line (object):
 
 class LStack (list):
     def __init__ (self, stack=None, data_type=None):
-        if (data_type.lower() == 'dxf' and
-            type(stack) == list:
+        if ( data_type.lower() == 'dxf' and
+             type(stack) == list):
             pass
-        if (data_type.lower() == 'pat' and
-            type(stack) == list:
+        if ( data_type.lower() == 'pat' and
+             type(stack) == list):
             pass
     
     def add (self, addition):
@@ -270,7 +270,7 @@ class LStack (list):
             result[item.layer].add(item)
         return result
     
-    def data_file (self, name=data):
+    def data_file (self, name='data'):
         result = name+' = {\n'
         space = ' '*4
         for item in self:
@@ -288,4 +288,4 @@ class LStack (list):
     
     def check (self, size):
         for item in self:
-            
+            pass
