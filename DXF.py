@@ -1,8 +1,10 @@
 from math import atan2, degrees
 from os.path import exists
 from SimplyLine import *
+from local import phrase
 
 precision = -4
+lang = 'ru' # Ignore this string, if you want to use english in program
 
 def clear_object ():
     return {
@@ -17,15 +19,15 @@ def clear_object ():
 
 def _open_ (dxf_name=False):
     if not dxf_name:
-        dxf_name = input ('Введите имя файла: ')
+        dxf_name = input (phrase('FileName', lang))
     if exists(dxf_name):
         return open (dxf_name, 'r')
     elif exists(dxf_name+'.dxf'):
-        answer = input ('Подтверждается '+dxf_name+'.dxf? ')
+        answer = input (phrase('Confirm', lang)+dxf_name+'.dxf? ')
         if any(answer.lower() in item for item in ('да', 'yes', 'верно')):
             return open (dxf_name+'.dxf', 'r')
     else:
-        print ('Файл не обнаружен.')
+        print (phrase('NotFound', lang))
         return False
 
 def _read_ (dxf_name=False):
@@ -97,7 +99,7 @@ def get_data (dxf_file):
 def get_object (data, name=False):
     stack = []
     if not name:
-        name = input ('Введите имя объекта для выборки: ')
+        name = input (phrase('ObjectName', lang))
     for item in data:
         if item[0] == name:
             stack.append(item)
@@ -148,7 +150,7 @@ def print_stack (stack, spaces=''):
 
 def do_result_file (result_name=False, data):
     if not result_name:
-        result_name = input ('Введите имя файла для результата: ')
+        result_name = input (phrase('ResultFile', lang))
     new_file = open (result_name, 'w')
     new_file.write(''.join(data))
     new_file.close()
@@ -157,4 +159,4 @@ if __name__ == '__main__':
     data = get('Stuffs/FQ.dxf', 'ENTITIES')
     printable = print_stack(data)
     do_result_file ('Stuffs/result.txt', printable)
-    print ('Готово!')
+    print (phrase('Done', lang))
