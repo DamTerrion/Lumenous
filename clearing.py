@@ -21,8 +21,8 @@ def bak (days=60, direction='bak'):
                 except Exception:
                     log.write('\t'+"wasn't removed:\n"+
                                   '\t'+file+'\t'+ctime(last)+'\n')
-            else:
-                log.write('\t'+file+'\t'+ctime(last)+'\n')
+                else:
+                    log.write('\t'+file+'\t'+ctime(last)+'\n')
     log.write('\n')
     log.close()
 
