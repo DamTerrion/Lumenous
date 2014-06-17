@@ -100,8 +100,6 @@ def ndxf (dxf_name):
         print ('    Всё отлично!')
         # Если не возникло ошибок, в лог выводится информация об обработке
     
-__author__ = 'Максим "ДамТеррион" Соловьёв'
-
 # ------------------------------ #
 #! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
 
@@ -117,13 +115,14 @@ if not need_clear :
     pass
     #  то ничего не происходит, остальные условия игнорируются.
 elif need_clear.isdigit():
-    if need_clear < 10:
+    if int(need_clear) < 10:
         # Защита от случайного ввода малых чисел с NumPad
         sure = input ('Вы уверены? (Да/Нет) ')
         if (sure.lower() in 'да' or
             sure.lower() in 'yes'):
             sure = True
         else: sure = False
+    else: sure = True
     if sure:
         clearing.bak(int(need_clear))
         print ('Произведена чистка файлов старше',need_clear,'дней.')
