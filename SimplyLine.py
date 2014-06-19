@@ -1,24 +1,31 @@
 from math import pi, cos, sin, radians
 
 class Line (object):
-    def __init__ (self, x, y, lenght, width, angle,
-                  layer='0', origin=None, colour=None):
-        self.x = x
-        self.xr = round(x)
+    def __init__ (self,
+                  x, y,
+                  lenght,
+                  width,
+                  angle,
+                  layer='0',
+                  origin=None,
+                  colour=None):
         
-        self.y = y
-        self.yr = round(y)
+        self.x  = int(x)
+        self.xr = round(self.x)
         
-        self.l = lenght
-        self.lr = round(lenght)
-        self.ls = str(lenght/1000)
+        self.y  = int(y)
+        self.yr = round(self.y)
         
-        self.w = width
-        self.wr = round(width)
-        self.ws = str(width/1000)
+        self.l  = int(lenght)
+        self.lr = round(self.l)
+        self.ls = str(self.l/1000)
         
-        self.a = angle
-        self.ar = round(angle)
+        self.w  = int(width)
+        self.wr = round(self.w)
+        self.ws = str(self.w/1000)
+        
+        self.a   = int(angle)
+        self.ar  = round(self.a)
         self.rad = radians(angle / 10)
         
         self.cos = cos(self.rad)
@@ -34,19 +41,35 @@ class Line (object):
                            self.sin)
     
     def check (self, size=102):
-        Correct_code = 1
+        Correct = 1
         
-        if size == 102:
-            Rang1 = (0, 102)
-            Rang2 = (51-40, 51+40)
-        if size == 127:
-            Rang1 = (0, 127)
-            Rang2 = (63.5-50, 63.5+50)
+        Rang = {'76':   30,
+                '102':  40,
+                '127':  50,
+                '153':  60}
         
-        if (self.x%1 > 0.1 or self.y%1 > 0.1):
-            Correct_code = 2
-        if (self.x%0.25 > 0.1 or self.y%0.25 > 0.1):
-            Correct_code = 3
+        if str(size) in Rang:
+            Allowed = [int(size)/2-Rang(str(size)),
+                       int(size)/2+Rang(str(size))]
+        else: return { 'Correct': 0 }
+        
+        if (abs(self.xr - self.x) > 0.1 or
+            abs(self.yr - self.y) > 0.1 ):
+            Correct = 2
+        
+        if (self.x%0.25 > 0.03 or
+            self.y%0.25 > 0.03 ):
+            Correct = 3
+        
+        if (self.x < Allowed[0] or
+            self.x > Allowed[1] or
+            self.y < Allowed[0] or
+            self.y > Allowed[1] ):
+            Correct += 4
+        
+        if (self.x < 0 or self.x > int(size) or
+            self.y < 0 or self.y > int(size) ):
+            Correct += 4
         
         return { 'Correct': Correct }
     
