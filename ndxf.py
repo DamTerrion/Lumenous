@@ -99,7 +99,9 @@ def ndxf (dxf_name):
         log.close()
         print ('    Всё отлично!')
         # Если не возникло ошибок, в лог выводится информация об обработке
-    
+
+__author__ = 'Максим "ДамТеррион" Соловьёв'
+
 # ------------------------------ #
 #! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
 
@@ -124,14 +126,32 @@ elif need_clear.isdigit():
         else: sure = False
     else: sure = True
     if sure:
-        clearing.bak(int(need_clear))
-        print ('Произведена чистка файлов старше',need_clear,'дней.')
+        count = clearing.bak(int(need_clear))
+        print ('Произведена чистка файлов старше', need_clear, 'дней.')
+        
+        if (count%10 == 1 and
+            count%100 != 11):
+            few_files = 'файл.'
+        elif (сount%10 in (2, 3, 4) and
+            not count%100 in (12, 13, 14)):
+            few_files = 'файла.'
+        else: few_files = 'файлов.'
+        print ('Удалено', count, few_files)
     
 elif (need_clear.lower() in 'да' or
       need_clear.lower() in 'yes'):
     # Если пользователь ответил положительно
-    clearing.bak(45)
+    count = clearing.bak(45)
     print ('Произведена чистка файлов старше 45 дней.')
+    
+    if (count%10 == 1 and
+        count%100 != 11):
+        few_files = 'файл.'
+    elif (сount%10 in (2, 3, 4) and
+        not count%100 in (12, 13, 14)):
+        few_files = 'файла.'
+    else: few_files = 'файлов.'
+    print ('Удалено', count, few_files)
     
 elif (need_clear.lower() in 'нет' or
       need_clear.lower() in 'not'):

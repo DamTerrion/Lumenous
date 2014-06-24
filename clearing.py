@@ -12,6 +12,7 @@ def bak (days=60, direction='bak'):
     log = open (direction+'/deleted.log', 'a')
     log.write(ctime(now())+',\t'+str(days)+'\n'+
                   '------------------------\n')
+    count = 0
     for name, dirs, files in walk(direction):
         for file in files:
             last = path.getatime(direction+'/'+file)
@@ -23,8 +24,10 @@ def bak (days=60, direction='bak'):
                                   '\t'+file+'\t'+ctime(last)+'\n')
                 else:
                     log.write('\t'+file+'\t'+ctime(last)+'\n')
+                    count += 1
     log.write('\n')
     log.close()
+    return count
 
 if __name__ == '__main__':
     days = input ('Введите максимальную давность файлов: ')
