@@ -130,12 +130,21 @@ def structurize (data, name=False, i=0, break_condition=(0, 'EOF')):
     if name: return stack, i+1
     else: return stack[1]
 
-def get (dxf_name=False, objects=False):
+def get (objects, dxf_name=False):
     data = _read_(dxf_name)
     data = structurize(data)
     if objects:
         data = get_object(data, objects)
     return data
+
+def get_head (data):
+    stack = []
+    for item in data:
+        if type(item) in (tuple, list, dict):
+            stack.append(item[0])
+        if type(item) in (int, str):
+            stack.append(item)
+    return stack
 
 def print_stack (stack, spaces=''):
     result = []
@@ -148,7 +157,7 @@ def print_stack (stack, spaces=''):
             result.append(spaces+str(item)+'\n')
     return result
 
-def do_result_file (result_name=False, data):
+def do_result_file (data, result_name=False):
     if not result_name:
         result_name = input (phrase('ResultFile', lang))
     new_file = open (result_name, 'w')
@@ -156,7 +165,7 @@ def do_result_file (result_name=False, data):
     new_file.close()
 
 if __name__ == '__main__':
-    data = get('Stuffs/FQ.dxf', 'ENTITIES')
+    data = get('ENTITIES')[1]
     printable = print_stack(data)
-    do_result_file ('Stuffs/result.txt', printable)
+    do_result_file (printable)
     print (phrase('Done', lang))
