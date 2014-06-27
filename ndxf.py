@@ -100,35 +100,64 @@ def ndxf (dxf_name):
         print ('    Всё отлично!')
         # Если не возникло ошибок, в лог выводится информация об обработке
 
-__author__ = 'Максим "ДамТеррион" Соловьёв'
+def call_clearing (command=False):
+    if not command:
+        print ('Чистка отменена')
+        return False
+    if (type(command) == int or
+        (type(command) == str and command.isdigit()
+         )):
+        if int(command) > 9 or confirm():
+            need_clear (int(command))
+            return True
+        else:
+            return False
+    if (command == True or
+        (type(command) == str and confirm(command)
+         )):
+        need_clear()
+        return True
+    return False
 
-# ------------------------------ #
-#! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
-
-if __name__ == '__main__':
-    need_clear = input ('Произвести чистку? (Да/Нет/Срок) ')
-    # Подчистка мусора на выбор пользователя,
-    #  если этот скрипт запущен как основной,
-    #  а не импортирован из другого скрипта.
-else: need_clear = False
-
-if not need_clear :
-    # Если need_clear равно False, пусто или отсутствует,
-    pass
-    #  то ничего не происходит, остальные условия игнорируются.
-elif need_clear.isdigit():
-    if int(need_clear) < 10:
-        # Защита от случайного ввода малых чисел с NumPad
+def confirm (status=None, recursive=False):
+    right = ('д', 'да', 'верно', 'истина', 'истинно',
+             'y', 'yes', 'yeah', 'right', 'true')
+    wrong = ('н', 'нет', 'неверно', 'ошибка', 'ошибочно',
+             'n', 'no', 'not', 'wrong', 'false')
+    
+    if status == None:
         sure = input ('Вы уверены? (Да/Нет) ')
-        if (sure.lower() in 'да' or
-            sure.lower() in 'yes'):
-            sure = True
-        else: sure = False
-    else: sure = True
-    if sure:
-        count = clearing.bak(int(need_clear))
+        if sure in right: return True
+        elif sure in wrong: return False
+        else: return confirm('FaultStr', recursive)
+    if type(status) == bool:
+        return status
+    if type(status) in (int, float):
+        if status == 0: return False
+        elif status != 1 and recursive:
+            return confirm('FaultInt', recursive)
+        else: return True
+    if type(status) == str:
+        if status == 'FaultStr':
+            print ('Ответ не ясен.')
+            if recursive:
+                print ('Попробуйте ещё раз.')
+                return confirm (None, recursive)
+            return None
+        if status == 'FaultInt':
+            print ('Передано неправильное число.\n')
+            new = input ('Пожалуйста, введите 0 или 1: ')
+            if not new.isdigit():
+                return confirm ('FaultInt', recursive)
+            else: return confirm (int(new), recursive)
+        if status in right: return True
+        elif status in wrong: return False
+        else: return confirm('FaultStr', recursive)
+
+def need_clear (days=45):
+    try:
+        count = clearing.bak(days)
         print ('Произведена чистка файлов старше', need_clear, 'дней.')
-        
         if (count%10 == 1 and
             count%100 != 11):
             few_files = 'файл.'
@@ -137,32 +166,18 @@ elif need_clear.isdigit():
             few_files = 'файла.'
         else: few_files = 'файлов.'
         print ('Удалено', count, few_files)
-    
-elif (need_clear.lower() in 'да' or
-      need_clear.lower() in 'yes'):
-    # Если пользователь ответил положительно
-    count = clearing.bak(45)
-    print ('Произведена чистка файлов старше 45 дней.')
-    
-    if (count%10 == 1 and
-        count%100 != 11):
-        few_files = 'файл.'
-    elif (сount%10 in (2, 3, 4) and
-        not count%100 in (12, 13, 14)):
-        few_files = 'файла.'
-    else: few_files = 'файлов.'
-    print ('Удалено', count, few_files)
-    
-elif (need_clear.lower() in 'нет' or
-      need_clear.lower() in 'not'):
-    # Если пользователь ответил отрицательно
-    print ('Хорошо. Чистка отменена')
-    
-else:
-    print ('Ответ не ясен. Ничего не сделано')
+    except Exception:
+        return False
+    else: return True
 
-#! ВЫДЕЛИТЬ В ОТДЕЛЬНУЮ ФУНКЦИЮ !#
-# ------------------------------ #
+__author__ = 'Максим "ДамТеррион" Соловьёв'
+
+if __name__ == '__main__':
+    need = input ('Произвести чистку? (Да/Нет/Срок) ')
+    call_clearing(need)
+    # Подчистка мусора на выбор пользователя,
+    #  если этот скрипт запущен как основной,
+    #  а не импортирован из другого скрипта.
  
 while __name__ == '__main__':
     # Цикл выполняется, пока это главный скрипт,
