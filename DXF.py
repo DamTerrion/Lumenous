@@ -1,7 +1,7 @@
 from math import atan2, degrees
 from os.path import exists
 from SimplyLine import *
-from local import phrase
+from local import say
 
 precision = -4
 lang = 'ru' # Ignore this string, if you want to use english in program
@@ -19,15 +19,16 @@ def clear_object ():
 
 def _open_ (dxf_name=False):
     if not dxf_name:
-        dxf_name = input (phrase('FileName', lang))
+        dxf_name = say('Input a file name ', lang, 'input')
     if exists(dxf_name):
-        return open (dxf_name, 'r')
+        return open(dxf_name, 'r')
     elif exists(dxf_name+'.dxf'):
-        answer = input (phrase('Confirm', lang)+dxf_name+'.dxf? ')
+        print(dxf_name+'.dxf')
+        answer = say('Are you confirm? ', lang, 'input')
         if any(answer.lower() in item for item in ('да', 'yes', 'верно')):
-            return open (dxf_name+'.dxf', 'r')
+            return open(dxf_name+'.dxf', 'r')
     else:
-        print (phrase('NotFound', lang))
+        say('File not found', lang)
         return False
 
 def _read_ (dxf_name=False):
@@ -99,7 +100,7 @@ def get_data (dxf_file):
 def get_object (data, name=False):
     stack = []
     if not name:
-        name = input (phrase('ObjectName', lang))
+        name = say('Input name of object for selection: ', lang, 'input')
     for item in data:
         if item[0] == name:
             stack.append(item)
@@ -114,7 +115,7 @@ def get_object (data, name=False):
 def structurize (data, name=False, i=0, break_condition=(0, 'EOF')):
     stack = (name, [])
     while i < len(data)-1:
-        if ( data[i] == break_condition or
+        if (data[i] == break_condition or
             (data[i][0], 'ANY') == break_condition):
             return stack, i
         elif data[i] == (0, 'SECTION'):
@@ -149,18 +150,18 @@ def get_head (data):
 def print_stack (stack, spaces=''):
     result = []
     for item in stack:
-        if type(item) == tuple:
+        if isinstance(item, tuple):
             result.extend(print_stack (item, spaces+'  '))
-        elif type(item) == list:
+        elif isinstance(item, list):
             result.extend(print_stack (item, spaces+''))
         else:
-            result.append(spaces+str(item)+'\n')
+            result.append(''.join((spaces, str(item), '\n')))
     return result
 
 def do_result_file (data, result_name=False):
     if not result_name:
-        result_name = input (phrase('ResultFile', lang))
-    new_file = open (result_name, 'w')
+        result_name = say('Input name of result file', lang, 'input')
+    new_file = open(result_name, 'w')
     new_file.write(''.join(data))
     new_file.close()
 
@@ -168,4 +169,4 @@ if __name__ == '__main__':
     data = get('ENTITIES')[1]
     printable = print_stack(data)
     do_result_file (printable)
-    print (phrase('Done', lang))
+    say('Done!', lang)
