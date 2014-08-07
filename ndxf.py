@@ -1,6 +1,6 @@
 from os import replace, path, mkdir
 from time import ctime, time as now
-from local import phrase
+from local import say
 import clearing
 
 lang = 'ru'
@@ -17,7 +17,7 @@ def ndxf (dxf_name):
         # File opens for reading
         ## Файл открывается для считывания
     except FileNotFoundError:
-        phrase('File not found', lang)
+        say('File not found', lang)
         return False
     
     Allowed = { '_INIT_':    (' 0', ' 8'),
@@ -96,7 +96,7 @@ def ndxf (dxf_name):
     try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
     except Exception:
         replace (dxf_name, dxf_name+'.bak')
-        phrase("Can't replace this file to '/bak'!", lang)
+        say("Can't replace this file to '/bak'!", lang)
     ''' replace (dxf_name, 'bak/'+dxf_name+'.bak') '''
     # Обрабатывавшийся файл <name>.dxf превращается в bak/<name>.dxf.bak
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
@@ -118,7 +118,7 @@ def ndxf (dxf_name):
                             ctime(now()), '\n'
                             ))
         log.close()
-        prase ('Mistake was maked during processing', lang)
+        say('Mistake was maked during processing', lang)
         # If was found an exception, it's logging to log
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
@@ -130,13 +130,13 @@ def ndxf (dxf_name):
                           ctime(now()), '\n'
                           ))
         log.close()
-        phrase('All done!', lang)
+        say('All done!', lang)
         # If wasn't found any exceptions, processe's information logging
         # Если не возникло ошибок, в лог выводится информация об обработке
 
 def call_clearing (command=False):
     if not command:
-        phrase('Clearing aborted', lang)
+        say('Clearing aborted', lang)
         return False
     if (type(command) == int or
         (type(command) == str and command.isdigit()
@@ -160,7 +160,7 @@ def confirm (status=None, recursive=False):
              'n', 'no', 'not', 'wrong', 'false')
     
     if status == None:
-        sure = prase('Are you sure?', lang, 'input')
+        sure = say('Are you sure? ', lang, 'input')
         if sure in right: return True
         elif sure in wrong: return False
         else: return confirm('FaultStr', recursive)
@@ -173,14 +173,14 @@ def confirm (status=None, recursive=False):
         else: return True
     if type(status) == str:
         if status == 'FaultStr':
-            phrase("Can't understand", lang)
+            say("Can't understand", lang)
             if recursive:
-                phrase('Try again', lang)
+                say('Try again', lang)
                 return confirm (None, recursive)
             return None
         if status == 'FaultInt':
-            phrase('Wrong Int detected.', lang)
-            new = prase('Input 0 or 1: ', lang, 'input')
+            say('Wrong Int entered', lang)
+            new = say('Input 0 or 1: ', lang, 'input')
             if not new.isdigit():
                 return confirm ('FaultInt', recursive)
             else: return confirm (int(new), recursive)
@@ -193,7 +193,7 @@ def need_clear (days=45):
     try:
         count = clearing.bak(days)
         ''' print ('Произведена чистка файлов старше', need_clear, 'дней.') '''
-        phrase(('All files older than _ days was deleted.', need_clear), lang)
+        say(('All files older than _ days was deleted.', need_clear), lang)
         if (count%10 == 1 and
             count%100 != 11):
             few_files = 'файл.'
@@ -201,7 +201,7 @@ def need_clear (days=45):
             not count%100 in (12, 13, 14)):
             few_files = 'файла.'
         else: few_files = 'файлов.'
-        print (phrase('Deleted', lang, 'noprint'), count, few_files)
+        print (say('Deleted', lang, 'noprint'), count, few_files)
     except Exception:
         return False
     else: return True
@@ -210,7 +210,7 @@ def need_clear (days=45):
 __author__ = 'Maksim "DamTerrion" Solovev'
 
 if __name__ == '__main__':
-    need = phrase('Activate clearing? (Yes/Not/Days)', lang, 'input')
+    need = say('Activate clearing? (Yes/Not/Days)', lang, 'input')
     call_clearing(need)
     # Garbage cleaning from user's choice
     #  if this script is main script
@@ -222,10 +222,10 @@ while __name__ == '__main__':
     # Loop working until this is a main script
     ## Цикл выполняется, пока это главный скрипт,
     ##  а не импортированный
-    code = phrase('Input name of DXF-file for processing', lang, 'input')
+    code = say('Input name of DXF-file for processing: ', lang, 'input')
     if code in ('quit', 'exit', 'выход', 'конец') : break
     try: ndxf (code)
-    except Exception: phrase('Mistake was making', lang)
+    except Exception: say('Mistake was maked', lang)
     # I havn't any idea, how script can be stop being main in loop
     ## Строго говоря, не представляю, как скрипт может
     ##  внутри цикла перестать быть главным
