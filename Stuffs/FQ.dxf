@@ -333,11 +333,11 @@ $SKPOLY
   9
 $TDCREATE
  40
-2456781.911445613
+2456781.911445602
   9
 $TDUPDATE
  40
-2456781.912718622
+2456878.649684965
   9
 $TDINDWG
  40
@@ -401,7 +401,7 @@ $HANDLING
   9
 $HANDSEED
   5
-25C
+3A5
   9
 $SURFTAB1
  70
@@ -641,9 +641,9 @@ VPORT
  37
 0.0
  40
-5.953666
+9.776518
  41
-2.090141
+1.272846
  42
 50.0
  43
@@ -699,7 +699,7 @@ TABLE
   2
 LAYER
  70
-     5
+     4
   0
 LAYER
   2
@@ -1007,7 +1007,7 @@ FERRIT
   0
 VERTEX
   5
-18F
+2D8
   8
 FERRIT
  10
@@ -1019,7 +1019,7 @@ FERRIT
   0
 VERTEX
   5
-190
+2D9
   8
 FERRIT
  10
@@ -1031,7 +1031,7 @@ FERRIT
   0
 SEQEND
   5
-218
+361
   8
 FERRIT
   0
@@ -1055,7 +1055,7 @@ FERRIT
   0
 VERTEX
   5
-191
+2DA
   8
 FERRIT
  10
@@ -1067,7 +1067,7 @@ FERRIT
   0
 VERTEX
   5
-192
+2DB
   8
 FERRIT
  10
@@ -1079,7 +1079,7 @@ FERRIT
   0
 SEQEND
   5
-219
+362
   8
 FERRIT
   0
@@ -1103,7 +1103,7 @@ FERRIT
   0
 VERTEX
   5
-193
+2DC
   8
 FERRIT
  10
@@ -1115,7 +1115,7 @@ FERRIT
   0
 VERTEX
   5
-194
+2DD
   8
 FERRIT
  10
@@ -1127,7 +1127,7 @@ FERRIT
   0
 SEQEND
   5
-21A
+363
   8
 FERRIT
   0
@@ -1151,7 +1151,7 @@ FERRIT
   0
 VERTEX
   5
-195
+2DE
   8
 FERRIT
  10
@@ -1163,7 +1163,7 @@ FERRIT
   0
 VERTEX
   5
-196
+2DF
   8
 FERRIT
  10
@@ -1175,7 +1175,7 @@ FERRIT
   0
 SEQEND
   5
-21B
+364
   8
 FERRIT
   0
@@ -1199,7 +1199,7 @@ FERRIT
   0
 VERTEX
   5
-197
+2E0
   8
 FERRIT
  10
@@ -1211,7 +1211,7 @@ FERRIT
   0
 VERTEX
   5
-198
+2E1
   8
 FERRIT
  10
@@ -1223,7 +1223,7 @@ FERRIT
   0
 SEQEND
   5
-21C
+365
   8
 FERRIT
   0
@@ -1247,7 +1247,7 @@ FERRIT
   0
 VERTEX
   5
-199
+2E2
   8
 FERRIT
  10
@@ -1259,7 +1259,7 @@ FERRIT
   0
 VERTEX
   5
-19A
+2E3
   8
 FERRIT
  10
@@ -1271,7 +1271,7 @@ FERRIT
   0
 SEQEND
   5
-21D
+366
   8
 FERRIT
   0
@@ -1295,7 +1295,7 @@ FERRIT
   0
 VERTEX
   5
-19B
+2E4
   8
 FERRIT
  10
@@ -1307,7 +1307,7 @@ FERRIT
   0
 VERTEX
   5
-19C
+2E5
   8
 FERRIT
  10
@@ -1319,7 +1319,7 @@ FERRIT
   0
 SEQEND
   5
-21E
+367
   8
 FERRIT
   0
@@ -1343,7 +1343,7 @@ FERRIT
   0
 VERTEX
   5
-19D
+2E6
   8
 FERRIT
  10
@@ -1355,7 +1355,7 @@ FERRIT
   0
 VERTEX
   5
-19E
+2E7
   8
 FERRIT
  10
@@ -1367,7 +1367,7 @@ FERRIT
   0
 SEQEND
   5
-21F
+368
   8
 FERRIT
   0
@@ -1391,7 +1391,7 @@ FERRIT
   0
 VERTEX
   5
-19F
+2E8
   8
 FERRIT
  10
@@ -1403,7 +1403,7 @@ FERRIT
   0
 VERTEX
   5
-1A0
+2E9
   8
 FERRIT
  10
@@ -1415,7 +1415,7 @@ FERRIT
   0
 SEQEND
   5
-220
+369
   8
 FERRIT
   0
@@ -1439,7 +1439,7 @@ FERRIT
   0
 VERTEX
   5
-1A1
+2EA
   8
 FERRIT
  10
@@ -1451,7 +1451,7 @@ FERRIT
   0
 VERTEX
   5
-1A2
+2EB
   8
 FERRIT
  10
@@ -1463,7 +1463,7 @@ FERRIT
   0
 SEQEND
   5
-221
+36A
   8
 FERRIT
   0
@@ -1487,7 +1487,7 @@ FERRIT
   0
 VERTEX
   5
-1A3
+2EC
   8
 FERRIT
  10
@@ -1499,7 +1499,7 @@ FERRIT
   0
 VERTEX
   5
-1A4
+2ED
   8
 FERRIT
  10
@@ -1511,7 +1511,7 @@ FERRIT
   0
 SEQEND
   5
-222
+36B
   8
 FERRIT
   0
@@ -1535,7 +1535,7 @@ FERRIT
   0
 VERTEX
   5
-1A5
+2EE
   8
 FERRIT
  10
@@ -1547,7 +1547,7 @@ FERRIT
   0
 VERTEX
   5
-1A6
+2EF
   8
 FERRIT
  10
@@ -1559,7 +1559,7 @@ FERRIT
   0
 SEQEND
   5
-223
+36C
   8
 FERRIT
   0
@@ -1568,6 +1568,8 @@ POLYLINE
 51
   8
 FERRIT
+ 62
+   130
  66
      1
  10
@@ -1583,9 +1585,11 @@ FERRIT
   0
 VERTEX
   5
-1A7
+2F0
   8
 FERRIT
+ 62
+   130
  10
 48.3
  20
@@ -1595,9 +1599,11 @@ FERRIT
   0
 VERTEX
   5
-1A8
+2F1
   8
 FERRIT
+ 62
+   130
  10
 49.2
  20
@@ -1607,15 +1613,19 @@ FERRIT
   0
 SEQEND
   5
-224
+36D
   8
 FERRIT
+ 62
+   130
   0
 POLYLINE
   5
 55
   8
 FERRIT
+ 62
+   130
  66
      1
  10
@@ -1631,9 +1641,11 @@ FERRIT
   0
 VERTEX
   5
-1A9
+2F2
   8
 FERRIT
+ 62
+   130
  10
 48.3
  20
@@ -1643,9 +1655,11 @@ FERRIT
   0
 VERTEX
   5
-1AA
+2F3
   8
 FERRIT
+ 62
+   130
  10
 49.2
  20
@@ -1655,15 +1669,19 @@ FERRIT
   0
 SEQEND
   5
-225
+36E
   8
 FERRIT
+ 62
+   130
   0
 POLYLINE
   5
 59
   8
 FERRIT
+ 62
+   130
  66
      1
  10
@@ -1679,9 +1697,11 @@ FERRIT
   0
 VERTEX
   5
-1AB
+2F4
   8
 FERRIT
+ 62
+   130
  10
 48.3
  20
@@ -1691,9 +1711,11 @@ FERRIT
   0
 VERTEX
   5
-1AC
+2F5
   8
 FERRIT
+ 62
+   130
  10
 48.9
  20
@@ -1703,15 +1725,19 @@ FERRIT
   0
 SEQEND
   5
-226
+36F
   8
 FERRIT
+ 62
+   130
   0
 POLYLINE
   5
 5D
   8
 FERRIT
+ 62
+   130
  66
      1
  10
@@ -1727,9 +1753,11 @@ FERRIT
   0
 VERTEX
   5
-1AD
+2F6
   8
 FERRIT
+ 62
+   130
  10
 48.15
  20
@@ -1739,9 +1767,11 @@ FERRIT
   0
 VERTEX
   5
-1AE
+2F7
   8
 FERRIT
+ 62
+   130
  10
 48.15
  20
@@ -1751,9 +1781,11 @@ FERRIT
   0
 SEQEND
   5
-227
+370
   8
 FERRIT
+ 62
+   130
   0
 POLYLINE
   5
@@ -1775,7 +1807,7 @@ RRR
   0
 VERTEX
   5
-1AF
+2F8
   8
 RRR
  10
@@ -1787,7 +1819,7 @@ RRR
   0
 VERTEX
   5
-1B0
+2F9
   8
 RRR
  10
@@ -1799,7 +1831,7 @@ RRR
   0
 SEQEND
   5
-228
+371
   8
 RRR
   0
@@ -1823,7 +1855,7 @@ RRR
   0
 VERTEX
   5
-1B1
+2FA
   8
 RRR
  10
@@ -1835,7 +1867,7 @@ RRR
   0
 VERTEX
   5
-1B2
+2FB
   8
 RRR
  10
@@ -1847,7 +1879,7 @@ RRR
   0
 SEQEND
   5
-229
+372
   8
 RRR
   0
@@ -1871,7 +1903,7 @@ RRR
   0
 VERTEX
   5
-1B3
+2FC
   8
 RRR
  10
@@ -1883,7 +1915,7 @@ RRR
   0
 VERTEX
   5
-1B4
+2FD
   8
 RRR
  10
@@ -1895,7 +1927,7 @@ RRR
   0
 SEQEND
   5
-22A
+373
   8
 RRR
   0
@@ -1919,7 +1951,7 @@ RRR
   0
 VERTEX
   5
-1B5
+2FE
   8
 RRR
  10
@@ -1931,7 +1963,7 @@ RRR
   0
 VERTEX
   5
-1B6
+2FF
   8
 RRR
  10
@@ -1943,7 +1975,7 @@ RRR
   0
 SEQEND
   5
-22B
+374
   8
 RRR
   0
@@ -1967,7 +1999,7 @@ RRR
   0
 VERTEX
   5
-1B7
+300
   8
 RRR
  10
@@ -1979,7 +2011,7 @@ RRR
   0
 VERTEX
   5
-1B8
+301
   8
 RRR
  10
@@ -1991,7 +2023,7 @@ RRR
   0
 SEQEND
   5
-22C
+375
   8
 RRR
   0
@@ -2015,7 +2047,7 @@ RRR
   0
 VERTEX
   5
-1B9
+302
   8
 RRR
  10
@@ -2027,7 +2059,7 @@ RRR
   0
 VERTEX
   5
-1BA
+303
   8
 RRR
  10
@@ -2039,7 +2071,7 @@ RRR
   0
 SEQEND
   5
-22D
+376
   8
 RRR
   0
@@ -2048,6 +2080,8 @@ POLYLINE
 79
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2063,9 +2097,11 @@ RRR
   0
 VERTEX
   5
-1BB
+304
   8
 RRR
+ 62
+    51
  10
 52.15
  20
@@ -2075,9 +2111,11 @@ RRR
   0
 VERTEX
   5
-1BC
+305
   8
 RRR
+ 62
+    51
  10
 52.15
  20
@@ -2087,15 +2125,19 @@ RRR
   0
 SEQEND
   5
-22E
+377
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 7D
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2111,9 +2153,11 @@ RRR
   0
 VERTEX
   5
-1BD
+306
   8
 RRR
+ 62
+    51
  10
 52.3
  20
@@ -2123,9 +2167,11 @@ RRR
   0
 VERTEX
   5
-1BE
+307
   8
 RRR
+ 62
+    51
  10
 52.9
  20
@@ -2135,15 +2181,19 @@ RRR
   0
 SEQEND
   5
-22F
+378
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 81
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2159,9 +2209,11 @@ RRR
   0
 VERTEX
   5
-1BF
+308
   8
 RRR
+ 62
+    51
  10
 53.093934
  20
@@ -2171,9 +2223,11 @@ RRR
   0
 VERTEX
   5
-1C0
+309
   8
 RRR
+ 62
+    51
  10
 52.793934
  20
@@ -2183,15 +2237,19 @@ RRR
   0
 SEQEND
   5
-230
+379
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 85
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2207,9 +2265,11 @@ RRR
   0
 VERTEX
   5
-1C1
+30A
   8
 RRR
+ 62
+    51
  10
 53.05
  20
@@ -2219,9 +2279,11 @@ RRR
   0
 VERTEX
   5
-1C2
+30B
   8
 RRR
+ 62
+    51
  10
 53.05
  20
@@ -2231,15 +2293,19 @@ RRR
   0
 SEQEND
   5
-231
+37A
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 89
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2255,9 +2321,11 @@ RRR
   0
 VERTEX
   5
-1C3
+30C
   8
 RRR
+ 62
+    51
  10
 53.093934
  20
@@ -2267,9 +2335,11 @@ RRR
   0
 VERTEX
   5
-1C4
+30D
   8
 RRR
+ 62
+    51
  10
 52.793934
  20
@@ -2279,15 +2349,19 @@ RRR
   0
 SEQEND
   5
-232
+37B
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 8D
   8
 RRR
+ 62
+    51
  66
      1
  10
@@ -2303,9 +2377,11 @@ RRR
   0
 VERTEX
   5
-1C5
+30E
   8
 RRR
+ 62
+    51
  10
 52.3
  20
@@ -2315,9 +2391,11 @@ RRR
   0
 VERTEX
   5
-1C6
+30F
   8
 RRR
+ 62
+    51
  10
 52.9
  20
@@ -2327,15 +2405,19 @@ RRR
   0
 SEQEND
   5
-233
+37C
   8
 RRR
+ 62
+    51
   0
 POLYLINE
   5
 91
   8
 FERRIT
+ 62
+   140
  66
      1
  10
@@ -2351,9 +2433,11 @@ FERRIT
   0
 VERTEX
   5
-1C7
+310
   8
 FERRIT
+ 62
+   140
  10
 54.15
  20
@@ -2363,9 +2447,11 @@ FERRIT
   0
 VERTEX
   5
-1C8
+311
   8
 FERRIT
+ 62
+   140
  10
 54.15
  20
@@ -2375,15 +2461,19 @@ FERRIT
   0
 SEQEND
   5
-234
+37D
   8
 FERRIT
+ 62
+   140
   0
 POLYLINE
   5
 95
   8
 FERRIT
+ 62
+   140
  66
      1
  10
@@ -2399,9 +2489,11 @@ FERRIT
   0
 VERTEX
   5
-1C9
+312
   8
 FERRIT
+ 62
+   140
  10
 54.15
  20
@@ -2411,9 +2503,11 @@ FERRIT
   0
 VERTEX
   5
-1CA
+313
   8
 FERRIT
+ 62
+   140
  10
 55.05
  20
@@ -2423,15 +2517,19 @@ FERRIT
   0
 SEQEND
   5
-235
+37E
   8
 FERRIT
+ 62
+   140
   0
 POLYLINE
   5
 99
   8
 FERRIT
+ 62
+   140
  66
      1
  10
@@ -2447,9 +2545,11 @@ FERRIT
   0
 VERTEX
   5
-1CB
+314
   8
 FERRIT
+ 62
+   140
  10
 55.05
  20
@@ -2459,9 +2559,11 @@ FERRIT
   0
 VERTEX
   5
-1CC
+315
   8
 FERRIT
+ 62
+   140
  10
 55.05
  20
@@ -2471,9 +2573,11 @@ FERRIT
   0
 SEQEND
   5
-236
+37F
   8
 FERRIT
+ 62
+   140
   0
 POLYLINE
   5
@@ -2495,7 +2599,7 @@ FERRIT
   0
 VERTEX
   5
-1CD
+316
   8
 FERRIT
  10
@@ -2507,7 +2611,7 @@ FERRIT
   0
 VERTEX
   5
-1CE
+317
   8
 FERRIT
  10
@@ -2519,7 +2623,7 @@ FERRIT
   0
 SEQEND
   5
-237
+380
   8
 FERRIT
   0
@@ -2543,7 +2647,7 @@ FERRIT
   0
 VERTEX
   5
-1CF
+318
   8
 FERRIT
  10
@@ -2555,7 +2659,7 @@ FERRIT
   0
 VERTEX
   5
-1D0
+319
   8
 FERRIT
  10
@@ -2567,7 +2671,7 @@ FERRIT
   0
 SEQEND
   5
-238
+381
   8
 FERRIT
   0
@@ -2576,6 +2680,8 @@ POLYLINE
 A5
   8
 QUASAR
+ 62
+    94
  66
      1
  10
@@ -2591,9 +2697,11 @@ QUASAR
   0
 VERTEX
   5
-1D1
+31A
   8
 QUASAR
+ 62
+    94
  10
 45.65
  20
@@ -2603,9 +2711,11 @@ QUASAR
   0
 VERTEX
   5
-1D2
+31B
   8
 QUASAR
+ 62
+    94
  10
 45.65
  20
@@ -2615,15 +2725,19 @@ QUASAR
   0
 SEQEND
   5
-239
+382
   8
 QUASAR
+ 62
+    94
   0
 POLYLINE
   5
 A9
   8
 QUASAR
+ 62
+    94
  66
      1
  10
@@ -2639,9 +2753,11 @@ QUASAR
   0
 VERTEX
   5
-1D3
+31C
   8
 QUASAR
+ 62
+    94
  10
 45.970096
  20
@@ -2651,9 +2767,11 @@ QUASAR
   0
 VERTEX
   5
-1D4
+31D
   8
 QUASAR
+ 62
+    94
  10
 46.570096
  20
@@ -2663,15 +2781,19 @@ QUASAR
   0
 SEQEND
   5
-23A
+383
   8
 QUASAR
+ 62
+    94
   0
 POLYLINE
   5
 AD
   8
 QUASAR
+ 62
+    94
  66
      1
  10
@@ -2687,9 +2809,11 @@ QUASAR
   0
 VERTEX
   5
-1D5
+31E
   8
 QUASAR
+ 62
+    94
  10
 45.970096
  20
@@ -2699,9 +2823,11 @@ QUASAR
   0
 VERTEX
   5
-1D6
+31F
   8
 QUASAR
+ 62
+    94
  10
 46.570096
  20
@@ -2711,15 +2837,19 @@ QUASAR
   0
 SEQEND
   5
-23B
+384
   8
 QUASAR
+ 62
+    94
   0
 POLYLINE
   5
 B1
   8
 QUASAR
+ 62
+    94
  66
      1
  10
@@ -2735,9 +2865,11 @@ QUASAR
   0
 VERTEX
   5
-1D7
+320
   8
 QUASAR
+ 62
+    94
  10
 45.7
  20
@@ -2747,9 +2879,11 @@ QUASAR
   0
 VERTEX
   5
-1D8
+321
   8
 QUASAR
+ 62
+    94
  10
 46.1
  20
@@ -2759,9 +2893,11 @@ QUASAR
   0
 SEQEND
   5
-23C
+385
   8
 QUASAR
+ 62
+    94
   0
 POLYLINE
   5
@@ -2783,7 +2919,7 @@ QUASAR
   0
 VERTEX
   5
-1D9
+322
   8
 QUASAR
  10
@@ -2795,7 +2931,7 @@ QUASAR
   0
 VERTEX
   5
-1DA
+323
   8
 QUASAR
  10
@@ -2807,7 +2943,7 @@ QUASAR
   0
 SEQEND
   5
-23D
+386
   8
 QUASAR
   0
@@ -2831,7 +2967,7 @@ QUASAR
   0
 VERTEX
   5
-1DB
+324
   8
 QUASAR
  10
@@ -2843,7 +2979,7 @@ QUASAR
   0
 VERTEX
   5
-1DC
+325
   8
 QUASAR
  10
@@ -2855,7 +2991,7 @@ QUASAR
   0
 SEQEND
   5
-23E
+387
   8
 QUASAR
   0
@@ -2879,7 +3015,7 @@ QUASAR
   0
 VERTEX
   5
-1DD
+326
   8
 QUASAR
  10
@@ -2891,7 +3027,7 @@ QUASAR
   0
 VERTEX
   5
-1DE
+327
   8
 QUASAR
  10
@@ -2903,7 +3039,7 @@ QUASAR
   0
 SEQEND
   5
-23F
+388
   8
 QUASAR
   0
@@ -2927,7 +3063,7 @@ QUASAR
   0
 VERTEX
   5
-1DF
+328
   8
 QUASAR
  10
@@ -2939,7 +3075,7 @@ QUASAR
   0
 VERTEX
   5
-1E0
+329
   8
 QUASAR
  10
@@ -2951,7 +3087,7 @@ QUASAR
   0
 SEQEND
   5
-240
+389
   8
 QUASAR
   0
@@ -2975,7 +3111,7 @@ QUASAR
   0
 VERTEX
   5
-1E1
+32A
   8
 QUASAR
  10
@@ -2987,7 +3123,7 @@ QUASAR
   0
 VERTEX
   5
-1E2
+32B
   8
 QUASAR
  10
@@ -2999,7 +3135,7 @@ QUASAR
   0
 SEQEND
   5
-241
+38A
   8
 QUASAR
   0
@@ -3023,7 +3159,7 @@ QUASAR
   0
 VERTEX
   5
-1E3
+32C
   8
 QUASAR
  10
@@ -3035,7 +3171,7 @@ QUASAR
   0
 VERTEX
   5
-1E4
+32D
   8
 QUASAR
  10
@@ -3047,7 +3183,7 @@ QUASAR
   0
 SEQEND
   5
-242
+38B
   8
 QUASAR
   0
@@ -3071,7 +3207,7 @@ QUASAR
   0
 VERTEX
   5
-1E5
+32E
   8
 QUASAR
  10
@@ -3083,7 +3219,7 @@ QUASAR
   0
 VERTEX
   5
-1E6
+32F
   8
 QUASAR
  10
@@ -3095,7 +3231,7 @@ QUASAR
   0
 SEQEND
   5
-243
+38C
   8
 QUASAR
   0
@@ -3119,7 +3255,7 @@ QUASAR
   0
 VERTEX
   5
-1E7
+330
   8
 QUASAR
  10
@@ -3131,7 +3267,7 @@ QUASAR
   0
 VERTEX
   5
-1E8
+331
   8
 QUASAR
  10
@@ -3143,7 +3279,7 @@ QUASAR
   0
 SEQEND
   5
-244
+38D
   8
 QUASAR
   0
@@ -3167,7 +3303,7 @@ QUASAR
   0
 VERTEX
   5
-1E9
+332
   8
 QUASAR
  10
@@ -3179,7 +3315,7 @@ QUASAR
   0
 VERTEX
   5
-1EA
+333
   8
 QUASAR
  10
@@ -3191,7 +3327,7 @@ QUASAR
   0
 SEQEND
   5
-245
+38E
   8
 QUASAR
   0
@@ -3215,7 +3351,7 @@ QUASAR
   0
 VERTEX
   5
-1EB
+334
   8
 QUASAR
  10
@@ -3227,7 +3363,7 @@ QUASAR
   0
 VERTEX
   5
-1EC
+335
   8
 QUASAR
  10
@@ -3239,7 +3375,7 @@ QUASAR
   0
 SEQEND
   5
-246
+38F
   8
 QUASAR
   0
@@ -3248,6 +3384,8 @@ POLYLINE
 DD
   8
 QUASAR
+ 62
+     1
  66
      1
  10
@@ -3263,9 +3401,11 @@ QUASAR
   0
 VERTEX
   5
-1ED
+336
   8
 QUASAR
+ 62
+     1
  10
 49.645544
  20
@@ -3275,9 +3415,11 @@ QUASAR
   0
 VERTEX
   5
-1EE
+337
   8
 QUASAR
+ 62
+     1
  10
 50.105196
  20
@@ -3287,15 +3429,19 @@ QUASAR
   0
 SEQEND
   5
-247
+390
   8
 QUASAR
+ 62
+     1
   0
 POLYLINE
   5
 E1
   8
 QUASAR
+ 62
+     1
  66
      1
  10
@@ -3311,9 +3457,11 @@ QUASAR
   0
 VERTEX
   5
-1EF
+338
   8
 QUASAR
+ 62
+     1
  10
 50.554456
  20
@@ -3323,9 +3471,11 @@ QUASAR
   0
 VERTEX
   5
-1F0
+339
   8
 QUASAR
+ 62
+     1
  10
 50.073999
  20
@@ -3335,15 +3485,19 @@ QUASAR
   0
 SEQEND
   5
-248
+391
   8
 QUASAR
+ 62
+     1
   0
 POLYLINE
   5
 E5
   8
 QUASAR
+ 62
+     1
  66
      1
  10
@@ -3359,9 +3513,11 @@ QUASAR
   0
 VERTEX
   5
-1F1
+33A
   8
 QUASAR
+ 62
+     1
  10
 49.8
  20
@@ -3371,9 +3527,11 @@ QUASAR
   0
 VERTEX
   5
-1F2
+33B
   8
 QUASAR
+ 62
+     1
  10
 50.4
  20
@@ -3383,9 +3541,11 @@ QUASAR
   0
 SEQEND
   5
-249
+392
   8
 QUASAR
+ 62
+     1
   0
 POLYLINE
   5
@@ -3407,7 +3567,7 @@ QUASAR
   0
 VERTEX
   5
-1F3
+33C
   8
 QUASAR
  10
@@ -3419,7 +3579,7 @@ QUASAR
   0
 VERTEX
   5
-1F4
+33D
   8
 QUASAR
  10
@@ -3431,7 +3591,7 @@ QUASAR
   0
 SEQEND
   5
-24A
+393
   8
 QUASAR
   0
@@ -3455,7 +3615,7 @@ QUASAR
   0
 VERTEX
   5
-1F5
+33E
   8
 QUASAR
  10
@@ -3467,7 +3627,7 @@ QUASAR
   0
 VERTEX
   5
-1F6
+33F
   8
 QUASAR
  10
@@ -3479,7 +3639,7 @@ QUASAR
   0
 SEQEND
   5
-24B
+394
   8
 QUASAR
   0
@@ -3503,7 +3663,7 @@ QUASAR
   0
 VERTEX
   5
-1F7
+340
   8
 QUASAR
  10
@@ -3515,7 +3675,7 @@ QUASAR
   0
 VERTEX
   5
-1F8
+341
   8
 QUASAR
  10
@@ -3527,7 +3687,7 @@ QUASAR
   0
 SEQEND
   5
-24C
+395
   8
 QUASAR
   0
@@ -3551,7 +3711,7 @@ QUASAR
   0
 VERTEX
   5
-1F9
+342
   8
 QUASAR
  10
@@ -3563,7 +3723,7 @@ QUASAR
   0
 VERTEX
   5
-1FA
+343
   8
 QUASAR
  10
@@ -3575,7 +3735,7 @@ QUASAR
   0
 SEQEND
   5
-24D
+396
   8
 QUASAR
   0
@@ -3599,7 +3759,7 @@ QUASAR
   0
 VERTEX
   5
-1FB
+344
   8
 QUASAR
  10
@@ -3611,7 +3771,7 @@ QUASAR
   0
 VERTEX
   5
-1FC
+345
   8
 QUASAR
  10
@@ -3623,7 +3783,7 @@ QUASAR
   0
 SEQEND
   5
-24E
+397
   8
 QUASAR
   0
@@ -3647,7 +3807,7 @@ QUASAR
   0
 VERTEX
   5
-1FD
+346
   8
 QUASAR
  10
@@ -3659,7 +3819,7 @@ QUASAR
   0
 VERTEX
   5
-1FE
+347
   8
 QUASAR
  10
@@ -3671,7 +3831,7 @@ QUASAR
   0
 SEQEND
   5
-24F
+398
   8
 QUASAR
   0
@@ -3695,7 +3855,7 @@ QUASAR
   0
 VERTEX
   5
-1FF
+348
   8
 QUASAR
  10
@@ -3707,7 +3867,7 @@ QUASAR
   0
 VERTEX
   5
-200
+349
   8
 QUASAR
  10
@@ -3719,7 +3879,7 @@ QUASAR
   0
 SEQEND
   5
-250
+399
   8
 QUASAR
   0
@@ -3743,7 +3903,7 @@ QUASAR
   0
 VERTEX
   5
-201
+34A
   8
 QUASAR
  10
@@ -3755,7 +3915,7 @@ QUASAR
   0
 VERTEX
   5
-202
+34B
   8
 QUASAR
  10
@@ -3767,7 +3927,7 @@ QUASAR
   0
 SEQEND
   5
-251
+39A
   8
 QUASAR
   0
@@ -3791,7 +3951,7 @@ QUASAR
   0
 VERTEX
   5
-203
+34C
   8
 QUASAR
  10
@@ -3803,7 +3963,7 @@ QUASAR
   0
 VERTEX
   5
-204
+34D
   8
 QUASAR
  10
@@ -3815,7 +3975,7 @@ QUASAR
   0
 SEQEND
   5
-252
+39B
   8
 QUASAR
   0
@@ -3824,6 +3984,8 @@ POLYLINE
 10D
   8
 QUASAR
+ 62
+    12
  66
      1
  10
@@ -3839,9 +4001,11 @@ QUASAR
   0
 VERTEX
   5
-205
+34E
   8
 QUASAR
+ 62
+    12
  10
 53.645544
  20
@@ -3851,9 +4015,11 @@ QUASAR
   0
 VERTEX
   5
-206
+34F
   8
 QUASAR
+ 62
+    12
  10
 54.105196
  20
@@ -3863,15 +4029,19 @@ QUASAR
   0
 SEQEND
   5
-253
+39C
   8
 QUASAR
+ 62
+    12
   0
 POLYLINE
   5
 111
   8
 QUASAR
+ 62
+    12
  66
      1
  10
@@ -3887,9 +4057,11 @@ QUASAR
   0
 VERTEX
   5
-207
+350
   8
 QUASAR
+ 62
+    12
  10
 54.554456
  20
@@ -3899,9 +4071,11 @@ QUASAR
   0
 VERTEX
   5
-208
+351
   8
 QUASAR
+ 62
+    12
  10
 54.073999
  20
@@ -3911,15 +4085,19 @@ QUASAR
   0
 SEQEND
   5
-254
+39D
   8
 QUASAR
+ 62
+    12
   0
 POLYLINE
   5
 115
   8
 QUASAR
+ 62
+    12
  66
      1
  10
@@ -3935,9 +4113,11 @@ QUASAR
   0
 VERTEX
   5
-209
+352
   8
 QUASAR
+ 62
+    12
  10
 53.8
  20
@@ -3947,9 +4127,11 @@ QUASAR
   0
 VERTEX
   5
-20A
+353
   8
 QUASAR
+ 62
+    12
  10
 54.4
  20
@@ -3959,9 +4141,11 @@ QUASAR
   0
 SEQEND
   5
-255
+39E
   8
 QUASAR
+ 62
+    12
   0
 POLYLINE
   5
@@ -3983,7 +4167,7 @@ RRR
   0
 VERTEX
   5
-20B
+354
   8
 RRR
  10
@@ -3995,7 +4179,7 @@ RRR
   0
 VERTEX
   5
-20C
+355
   8
 RRR
  10
@@ -4007,7 +4191,7 @@ RRR
   0
 SEQEND
   5
-256
+39F
   8
 RRR
   0
@@ -4031,7 +4215,7 @@ RRR
   0
 VERTEX
   5
-20D
+356
   8
 RRR
  10
@@ -4043,7 +4227,7 @@ RRR
   0
 VERTEX
   5
-20E
+357
   8
 RRR
  10
@@ -4055,7 +4239,7 @@ RRR
   0
 SEQEND
   5
-257
+3A0
   8
 RRR
   0
@@ -4079,7 +4263,7 @@ RRR
   0
 VERTEX
   5
-20F
+358
   8
 RRR
  10
@@ -4091,7 +4275,7 @@ RRR
   0
 VERTEX
   5
-210
+359
   8
 RRR
  10
@@ -4103,7 +4287,7 @@ RRR
   0
 SEQEND
   5
-258
+3A1
   8
 RRR
   0
@@ -4127,7 +4311,7 @@ RRR
   0
 VERTEX
   5
-211
+35A
   8
 RRR
  10
@@ -4139,7 +4323,7 @@ RRR
   0
 VERTEX
   5
-212
+35B
   8
 RRR
  10
@@ -4151,7 +4335,7 @@ RRR
   0
 SEQEND
   5
-259
+3A2
   8
 RRR
   0
@@ -4175,7 +4359,7 @@ RRR
   0
 VERTEX
   5
-213
+35C
   8
 RRR
  10
@@ -4187,7 +4371,7 @@ RRR
   0
 VERTEX
   5
-214
+35D
   8
 RRR
  10
@@ -4199,7 +4383,7 @@ RRR
   0
 SEQEND
   5
-25A
+3A3
   8
 RRR
   0
@@ -4223,7 +4407,7 @@ RRR
   0
 VERTEX
   5
-215
+35E
   8
 RRR
  10
@@ -4235,7 +4419,7 @@ RRR
   0
 VERTEX
   5
-216
+35F
   8
 RRR
  10
@@ -4247,7 +4431,7 @@ RRR
   0
 SEQEND
   5
-25B
+3A4
   8
 RRR
   0
