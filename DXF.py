@@ -1,6 +1,6 @@
 from math import atan2, degrees
 from os.path import exists
-from SimplyLine import *
+from Exponion import Exponion, Poynting
 from local import say
 
 precision = -4
@@ -158,15 +158,11 @@ def print_stack (stack, spaces=''):
             result.append(''.join((spaces, str(item), '\n')))
     return result
 
-def do_result_file (data, result_name=False):
-    if not result_name:
-        result_name = say('Input name of result file', lang, 'input')
-    new_file = open(result_name, 'w')
-    new_file.write(''.join(data))
-    new_file.close()
-
 if __name__ == '__main__':
     data = get('ENTITIES')[1]
     printable = print_stack(data)
-    do_result_file (printable)
+    result_name = say('Input name of result file', lang, 'input')
+    new_file = open(result_name, 'w')
+    new_file.write(''.join(printable))
+    new_file.close()
     say('Done!', lang)
