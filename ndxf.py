@@ -60,8 +60,8 @@ def ndxf (dxf_name):
     else :
         # When 'Entites' starts it's write header
         ## Если же раздел ENTITIES начался, записывается его заголовок
-        new = ''.join('  0\n', 'SECTION\n',
-                      '  2\n', 'ENTITIES\n')
+        new = ''.join(('  0\n', 'SECTION\n',
+                       '  2\n', 'ENTITIES\n'))
         inObject = ''
         
         while not (Param == '  0\n' and Value == 'ENDSEC\n'):
@@ -83,11 +83,11 @@ def ndxf (dxf_name):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
-                    new = ''.join(Param, Value)
+                    new = ''.join((new, Param, Value))
         else:
             # Section is ended, data's writing can be completed
             ## Раздел кончился, можно завершить запись данных
-            new = '  0\n'.join('ENDSEC\n','EOF\n')
+            new = ''.join((new, '  0\n', 'ENDSEC\n', '  0\n', 'EOF\n'))
             
     dxf.close()
     if path.exists('bak') == False :
@@ -112,11 +112,11 @@ def ndxf (dxf_name):
         ## Попытка записи в файл с перехватом ошибок
     except Exception:
         log = open ('bak/processed.log', 'a')
-        log.write('\t'.join('Error',
-                            full_name[1], '|',
-                            full_name[0], '|',
-                            ctime(now()), '\n'
-                            ))
+        log.write('\t'.join(('Error',
+                             full_name[1], '|',
+                             full_name[0], '|',
+                             ctime(now()), '\n'
+                             )))
         log.close()
         say('Mistake was maked during processing', lang)
         # If was found an exception, it's logging to log
@@ -125,10 +125,10 @@ def ndxf (dxf_name):
         if len(full_name[1]) < 8: t = '\t\t'
         else: t = '\t'
         log = open ('bak/processed.log', 'a')
-        log.write(''.join(full_name[1], t,'|\t',
-                          full_name[0], '\t|\t',
-                          ctime(now()), '\n'
-                          ))
+        log.write(''.join((full_name[1], t,'|\t',
+                           full_name[0], '\t|\t',
+                           ctime(now()), '\n'
+                           )))
         log.close()
         say('All done!', lang)
         # If wasn't found any exceptions, processe's information logging
@@ -188,7 +188,7 @@ def confirm (status=None, recursive=False):
         elif status in wrong: return False
         else: return confirm('FaultStr', recursive)
 
-# -- It need to be remaked --
+# -- It need to be remade --
 def need_clear (days=45):
     try:
         count = clearing.bak(days)
@@ -205,12 +205,12 @@ def need_clear (days=45):
     except Exception:
         return False
     else: return True
-# -- It need to be remaked --
+# -- It need to be remade --
 
 __author__ = 'Maksim "DamTerrion" Solovev'
 
 if __name__ == '__main__':
-    need = say('Activate clearing? (Yes/Not/Days)', lang, 'input')
+    need = say('Activate clearing? (Yes/Not/Days) ', lang, 'input')
     call_clearing(need)
     # Garbage cleaning from user's choice
     #  if this script is main script
@@ -224,8 +224,9 @@ while __name__ == '__main__':
     ##  а не импортированный
     code = say('Input name of DXF-file for processing: ', lang, 'input')
     if code in ('quit', 'exit', 'выход', 'конец') : break
-    try: ndxf (code)
-    except Exception: say('Mistake was maked', lang)
+    #try:
+    ndxf(code)
+    #except Exception: say('Mistake was made', lang)
     # I havn't any idea, how script can be stop being main in loop
     ## Строго говоря, не представляю, как скрипт может
     ##  внутри цикла перестать быть главным
