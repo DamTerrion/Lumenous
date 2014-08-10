@@ -55,7 +55,7 @@ dictionary['ru'] = {
     'Input name of result file: ':
         'Введите имя файла для результата: ',
     
-    'Mistake was maked':
+    'Mistake was made':
         'Произошла ошибка',
     
     'Mistake was maked during processing':
