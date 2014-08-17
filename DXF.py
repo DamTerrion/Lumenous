@@ -39,50 +39,42 @@ def _read_ (dxf_name=False):
     dxf_file.close()
     return data
 
-######
+def get_couple (data, i):
+    def _marker_ (marker):
+        try:
+            assert len(marker) == 4
+            assert marker.strip().isdigit()
+        except AssertionError: return False
+        else: return True
+    
+    def _value_ (marker, value):
+        marker = int(marker.strip())
+        try:
+            if   marker in range (0, 10):  value =   str(value.strip())
+            elif marker in range (10, 60): value = float(value.strip())
+            elif marker in range (60, 80): value =   int(value.strip())
+            else value = value.strip()
+        except ValueError: return False
+        else: return value
+    
+    def _couple_ (A, B):
+        marker = int(A.strip())
+        value = _value_(A, B)
+        return (marker, value)
 
-def _marker_ (marker):    
-    try:
-        assert len(marker) == 4
-        assert marker.strip().isdigit()
-    except AssertionError:
-        return False
-    else: return True
-
-def _value_ (marker, value):
-    marker = int(marker.strip())
-    try:
-        if marker in range (0, 10):
-            value = str(value.strip())
-        elif marker in range (10, 60):
-            value = float(value.strip())
-        elif marker in range (60, 80):
-            value = int(value.strip())
-    except ValueError:
-        return False
-    else: return value
-
-def _couple_ (A, B):
-    marker = int(A.strip())
-    value = _value_ (A, B)
-    return (marker, value)
-
-######
-
-def get_couple (data, i):  
     A, B = data[i], data[i+1]
     try: C = data[i+2]
     except IndexError: C = '123\n'    
-    if _marker_ (A):
-        if _marker_ (C):
-            if not _value_ (A, B) is False:
-                return _couple_ (A, B)
+    if _marker_(A):
+        if _marker_(C):
+            if not _value_(A, B) is False:
+                return _couple_(A, B)
             else: return False
         else:
-            if not _marker_ (B):
-                return _couple_ (A, B)
+            if not _marker_(B):
+                return _couple_(A, B)
             else: return False
-    else: return False    
+    else: return False
 
 def get_data (dxf_file):
     data = []
