@@ -17,6 +17,7 @@ def clear_object ():
         'closed': None          # Замкнутость полилинии
         }
 
+'''
 def _open_ (dxf_name=False):
     if not dxf_name:
         dxf_name = say('Input a file name ', lang, 'input')
@@ -38,7 +39,23 @@ def _read_ (dxf_name=False):
     data = get_data(dxf_file)
     dxf_file.close()
     return data
+'''
 
+# Нужно отладить функцию загрузки файла
+# Хорошо бы добавить функцию выгрузки файла
+def load (dxf_name):
+    try:
+        dxf_file = open(dxf_name, 'r')
+        data = get_data(dxf_file)
+    except OSError:
+        say('Ошибка открытия файла', lang)
+    except Exception:
+        say('Неизвестная ошибка при открытии', lang)
+    finally:
+        dxf_file.close()
+    return data
+
+# Нужно разобраться с функцией получения пары
 def get_couple (data, i):
     def _marker_ (marker):
         try:
@@ -76,6 +93,7 @@ def get_couple (data, i):
             else: return False
     else: return False
 
+# Нужно переименовать 'get_data' в 'extract'
 def get_data (dxf_file):
     data = []
     for line in dxf_file:
@@ -89,6 +107,7 @@ def get_data (dxf_file):
             else: even = not even
     return stack
 
+# Нужно переименовать 'get_object' в 'elicit'
 def get_object (data, name=False):
     stack = []
     if not name:
@@ -123,6 +142,7 @@ def structurize (data, name=False, i=0, break_condition=(0, 'EOF')):
     if name: return stack, i+1
     else: return stack[1]
 
+# Нужно убрать функцию 'get', заменив более функциональной
 def get (objects, dxf_name=False):
     data = _read_(dxf_name)
     data = structurize(data)
@@ -130,6 +150,7 @@ def get (objects, dxf_name=False):
         data = get_object(data, objects)
     return data
 
+# Нужно проверить функциональность функции 'get_head'
 def get_head (data):
     stack = []
     for item in data:
@@ -139,6 +160,8 @@ def get_head (data):
             stack.append(item)
     return stack
 
+# Нужно проверить функциональность функции 'print_stack'
+# Вероятно, эта функция должна быть вынесена вовне
 def print_stack (stack, spaces=''):
     result = []
     for item in stack:
@@ -150,6 +173,7 @@ def print_stack (stack, spaces=''):
             result.append(''.join((spaces, str(item), '\n')))
     return result
 
+# Нужно выяснить, что вообще за чертовщина тут творится!
 if __name__ == '__main__':
     data = get('ENTITIES')[1]
     printable = print_stack(data)
