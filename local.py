@@ -1,35 +1,54 @@
 dictionary = dict.fromkeys(['en', 'ru'], {})
 dictionary['en'] = {
-    '_ErrorSent_': 'Mistake was maked during localization'
+    '_ErrorSent_': 'Mistake was made during localization'
     }
+
+'''
+Actual phrases = [
+    '_ErrorSent_',
+    '_FaultInt_',
+    '_FaultStr_',
+    'Activate clearing? (Yes/Not/Days)',
+    'All done!',
+    'Are you confirm?',
+    'Are you sure?',
+    "Can't understand",
+    "Can't replace this file to '/bak'!",
+    'Clearing aborted',
+    'Deleted',
+    'Done!',
+    'Few files was deleted.',
+    'File not found',
+    'File Opening Error',
+    'Input 0 or 1:',
+    'Input a file name',
+    'Input maximum limitation of files:',
+    'Input name of DXF-file for processing:',
+    'Input name of object for selection:',
+    'Input name of result file:',
+    'Limitation less than 10 days, are you confirm?',
+    'Mistake was made',
+    'Mistake was made during processing',
+    'Try again',
+    'Wrong Int entered'
+    ]
+'''
 
 dictionary['ru'] = {
     '_ErrorSent_':
         'Произошла ошибка локализации',
     
-    'Activate clearing? (Yes/Not/Days) ':
-        'Произвести чистку? (Да/Нет/Срок) ',
-    
     'All done!':
         'Всё готово!',
     
-    'All files older than _ days was deleted.':
-        'Все файлы старше _ дней были удалены.',
+    'Are you confirm?':
+        'Подтверждаете?',
     
-    'Are you confirm? ':
-        'Подтверждаете? ',
-    
-    'Are you sure? ':
-        'Вы уверены? ',
-
-    "Can't replace this file to '/bak'!":
-        "Невозможно записать этот файл в '/bak'!",
+    'Are you sure?':
+        'Вы уверены?',
     
     "Can't understand":
         'Ответ не ясен',
-    
-    'Clearing aborted':
-        'Чистка отменена',
     
     'Deleted':
         'Удалено',
@@ -40,25 +59,25 @@ dictionary['ru'] = {
     'File not found':
         'Файл не найден',
     
-    'Input 0 or 1: ':
-        'Введите 0 или 1: ',
+    'Input 0 or 1:':
+        'Введите 0 или 1:',
     
-    'Input a file name ':
-        'Введите имя файла: ',
+    'Input a file name':
+        'Введите имя файла:',
     
-    'Input name of DXF-file for processing: ':
-        'Введите имя DXF-файла для обработки: ',
+    'Input name of DXF-file for processing:':
+        'Введите имя DXF-файла для обработки:',
     
-    'Input name of object for selection: ':
-        'Введите имя объекта для выборки: ',
+    'Input name of object for selection:':
+        'Введите имя объекта для выборки:',
     
-    'Input name of result file: ':
-        'Введите имя файла для результата: ',
+    'Input name of result file:':
+        'Введите имя файла для результата:',
     
     'Mistake was made':
         'Произошла ошибка',
     
-    'Mistake was maked during processing':
+    'Mistake was made during processing':
         'Произошла ошибка во время обработки',
     
     'Try again':
@@ -69,23 +88,26 @@ dictionary['ru'] = {
     }
 
 def say (sentence, language='en', action='print'):
-    if isinstance(language, str):
+    if (isinstance(language, str) and isinstance(sentence, str)):
         language = language.lower()
-    if not language in dictionary:
-        return _do(sentence, action)
-    if isinstance(language, str):
-        if sentence in dictionary[language]:
-            return _do(dictionary[language][sentence], action)
-        else: return _do(dictionary[language]['_ErrorSent_'], action)
-    elif isinstance(sentence, tuple):
-        processed = say(sentence[0], language, 'noprint')
-        return _do(processed, action)
-
-def _do (sentence, action=False):
-    if action == 'print':
-        return print(sentence)
+    else: return False
     if action == 'input':
-        return input(sentence)
-    if action == 'noprint':
+        return ask(sentence, language)
+    if not language in dictionary:
+        language = 'en'
+    if sentence in dictionary[language]:
+        sentence = dictionary[language][sentence]
+    if action in ['print', 'p']:
+        return print(sentence)
+    if action in ['noprint', 'np']:
         return sentence
-    return False
+
+def ask (sentence, language='en'):
+    if (isinstance(language, str) and isinstance(sentence, str)):
+        language = language.lower()
+    else: return False
+    if not language in dictionary:
+        language = 'en'
+    if sentence in dictionary[language]:
+        sentence = dictionary[language][sentence]
+    return input(sentence+' ')
