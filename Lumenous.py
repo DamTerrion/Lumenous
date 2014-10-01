@@ -1,4 +1,6 @@
 from math import pi, cos, sin, radians
+from os.path import exists
+from local import say, ask
 
 class Exponion (object):
     def __init__ (self,

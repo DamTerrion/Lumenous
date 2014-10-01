@@ -1,18 +1,19 @@
 from os.path import exists
-from local import say
+from local import say, ask
+from confirm import confirm
 
 lang = 'ru' # Ignore this string, if you want to use english in program
 
 '''
 def _open_ (dxf_name=False):
     if not dxf_name:
-        dxf_name = say('Input a file name ', lang, 'input')
+        dxf_name = ask('Input a file name', lang)
     if exists(dxf_name):
         return open(dxf_name, 'r')
     elif exists(dxf_name+'.dxf'):
         print(dxf_name+'.dxf')
-        answer = say('Are you confirm? ', lang, 'input')
-        if any(answer.lower() in item for item in ('да', 'yes', 'верно')):
+        answer = ask('Are you confirm?', lang)
+        if confirm(answer):
             return open(dxf_name+'.dxf', 'r')
     else:
         say('File not found', lang)
@@ -43,9 +44,11 @@ def load (dxf_name):
         dxf_file = open(dxf_name, 'r')
         data = extract(dxf_file)
     except OSError:
-        say('Ошибка открытия файла', lang)
+        say('File Opening Error', lang)
+        # _Ошибка открытия файла_
     except Exception:
-        say('Неизвестная ошибка при открытии', lang)
+        say('Mistake was made', lang)
+        # _Произошла неизвестная ошибка_
     finally:
         dxf_file.close()
     return data
@@ -123,7 +126,7 @@ def get_couple (data, i):
 def elicit (data, name=False):
     stack = []
     if not name:
-        name = say('Input name of object for selection: ', lang, 'input')
+        name = ask('Input name of object for selection:', lang)
     for item in data:
         if item[0] == name:
             stack.append(item)
@@ -165,7 +168,7 @@ def print_stack (stack, spaces=''):
 if __name__ == '__main__':
     data = load('ENTITIES')[1]
     printable = print_stack(data)
-    result_name = say('Input name of result file', lang, 'input')
+    result_name = ask('Input name of result file', lang)
     new_file = open(result_name, 'w')
     new_file.write(''.join(printable))
     new_file.close()
