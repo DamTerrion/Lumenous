@@ -105,7 +105,7 @@ def get_couple (data, i):
             if   marker in range (0, 10):  value =   str(value.strip())
             elif marker in range (10, 60): value = float(value.strip())
             elif marker in range (60, 80): value =   int(value.strip())
-            else value = value.strip()
+            else: value = value.strip()
         except ValueError: return False
         else: return value
     
