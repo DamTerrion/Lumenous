@@ -7,7 +7,7 @@ dictionary['en'] = {
 Actualy phrases = [
     '_ErrorSent_',
     'Activate clearing? (Yes/Not/Days)',
-    'All done!',
+    'All done in',
     'Are you confirm?',
     'Are you sure?',
     "Can't replace this file to '/bak'!",
@@ -26,6 +26,7 @@ Actualy phrases = [
     'Limitation less than 10 days, are you confirm?',
     'Mistake was made',
     'Mistake was made during processing',
+    's.',
     'Try again',
     'Wrong Int entered'
     ]
@@ -38,8 +39,8 @@ dictionary['ru'] = {
     'Activate clearing? (Yes/Not/Days)':
         'Произвести чистку? (Да/Нет/Срок)',
     
-    'All done!':
-        'Всё готово!',
+    'All done in':
+        'Выполнено за',
     
     'Are you confirm?':
         'Подтверждаете?',
@@ -95,12 +96,19 @@ dictionary['ru'] = {
     'Mistake was made during processing':
         'Произошла ошибка во время обработки',
     
+    's.':
+        'с.',
+    
     'Try again':
         'Попробуйте ещё раз',
     
     'Wrong Int entered':
         'Введено неправильное число',
     }
+
+
+__author__ = 'Maksim "DamTerrion" Solov\'ev'
+
 
 def say (sentence, language='en', action='print'):
     if (isinstance(language, str) and isinstance(sentence, str)):

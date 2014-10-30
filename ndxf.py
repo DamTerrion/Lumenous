@@ -7,6 +7,7 @@ lang = 'ru'
 
 def ndxf (dxf_name):
     new = Param = Value = ''
+    start_tm = now()
     
     if not dxf_name.endswith('.dxf'):
         dxf_name += '.dxf'
@@ -101,7 +102,9 @@ def ndxf (dxf_name):
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    # As name of otigin file was changed, it recreating
+    job_tm = now() - start_tm
+
+    # Name of origin file was changed, and it recreating
     ## Так как имя исходного файла сменилось, он создаётся заново
     try:
         dxf = open (dxf_name, 'w')    
@@ -121,19 +124,24 @@ def ndxf (dxf_name):
         # If was found an exception, it's logging to log
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
-        if len(full_name[1]) < 8: t = '\t\t'
-        else: t = '\t'
+        t1 = '\t'*(4 - len(full_name[1])//4)
+        t0 = '\t'*(4 - len(full_name[0])//4)
         log = open ('bak/processed.log', 'a')
-        log.write(''.join((full_name[1], t,'|\t',
-                           full_name[0], '\t|\t',
+        log.write(''.join((full_name[1], t1, '|  ',
+                           full_name[0], t0, '|  ',
+                           str(job_tm), ' s.\t|  ',
                            ctime(now()), '\n'
-                           )))
-        log.close()
-        say('All done!', lang)
+                           ))
+                  )
+        log.close()        
         # If wasn't found any exceptions, processe's information logging
         # Если не возникло ошибок, в лог выводится информация об обработке
+        
+        print(say('All done in', lang, 'np'), job_tm, say('s.', lang, 'np'))
 
-__author__ = 'Maksim "DamTerrion" Solovev'
+
+__author__ = 'Maksim "DamTerrion" Solov\'ev'
+
 
 if __name__ == '__main__':
     need = ask('Activate clearing? (Yes/Not/Days)', lang)
@@ -149,5 +157,5 @@ while __name__ == '__main__':
     ## Цикл выполняется, если это главный скрипт,
     ##  а не импортированный
     code = ask('Input name of DXF-file for processing:', lang)
-    if code in ('quit', 'exit', 'выход', 'конец') : break
+    if code in ('quit', 'exit', 'выход', 'конец', 'хватит') : break
     ndxf(code)
