@@ -23,6 +23,7 @@ Actualy phrases = [
     'Input name of DXF-file for processing:',
     'Input name of object for selection:',
     'Input name of result file:',
+    'kB.',
     'Limitation less than 10 days, are you confirm?',
     'Mistake was made',
     'Mistake was made during processing',
@@ -86,6 +87,9 @@ dictionary['ru'] = {
     
     'Input name of result file:':
         'Введите имя файла для результата:',
+    
+    'kB.':
+        'кБ.',
     
     'Limitation less than 10 days, are you confirm?':
         'Срок давности меньше 10 дней, подтверждаете?',

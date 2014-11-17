@@ -7,7 +7,6 @@ lang = 'ru'
 
 def ndxf (dxf_name):
     new = Param = Value = ''
-    start_tm = now()
     
     if not dxf_name.endswith('.dxf'):
         dxf_name += '.dxf'
@@ -15,8 +14,9 @@ def ndxf (dxf_name):
     
     try:
         dxf = open (dxf_name, 'r')
-        # File opens for reading
-        ## Файл открывается для считывания
+        fsize = str(round(path.getsize(dxf_name)/1024, 1))
+        # File opens for reading, its size saved
+        ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
         say('File not found', lang)
         return False
@@ -51,6 +51,8 @@ def ndxf (dxf_name):
                 'SEQEND':    ()}
                             # Object "polyline is ends here"
                             ## Объект завершения полилинии
+    
+    start_tm = now()
     
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
         # Till 'Entities' section starts file just viewed
@@ -102,7 +104,7 @@ def ndxf (dxf_name):
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    job_tm = now() - start_tm
+    job_tm = str(round(now() - start_tm, 3))
 
     # Name of origin file was changed, and it recreating
     ## Так как имя исходного файла сменилось, он создаётся заново
@@ -124,12 +126,15 @@ def ndxf (dxf_name):
         # If was found an exception, it's logging to log
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
-        t1 = '\t'*(4 - len(full_name[1])//4)
-        t0 = '\t'*(4 - len(full_name[0])//4)
+        t1 = '\t'*(4 - (0+len(full_name[1])) //4)
+        t0 = '\t'*(5 - (3+len(full_name[0])) //4)
+        t2 = '\t'*(4 - (3+len(job_tm+' s.')) //4)
+        t3 = '\t'*(4 - (3+len(fsize+' kB.')) //4)
         log = open ('bak/processed.log', 'a')
-        log.write(''.join((full_name[1], t1, '|  ',
-                           full_name[0], t0, '|  ',
-                           str(job_tm), ' s.\t|  ',
+        log.write(''.join((full_name[1],  t1, '|  ',
+                           full_name[0],  t0, '|  ',
+                           job_tm, ' s.', t2, '|  ',
+                           fsize, ' kB.', t3, '|  ',
                            ctime(now()), '\n'
                            ))
                   )
