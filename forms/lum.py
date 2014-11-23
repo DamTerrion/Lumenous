@@ -1,6 +1,6 @@
 from math import pi, cos, sin, radians
 from os.path import exists
-from local import say, ask
+from base import local as l
 
 class Exponion (object):
     def __init__ (self,
@@ -194,8 +194,8 @@ class Poynting (list):
     def add (self, addition):
         if isinstance(addition, Exponion):
             self.append(addition)
-        elif isinstance(addition, Poynting) or
-             isinstance(addition, list):
+        elif (isinstance(addition, Poynting) or
+              isinstance(addition, list)):
             self.extend(addition)
     
     def extend (self, stack):
@@ -279,7 +279,7 @@ def vertex (point, full=True):
         result += ['  0', 'VERTEX',
                    '  8', self.layer]
     result += [' 10', str(point.real/1000),
-              [' 20', str(point.imag/1000)]
+               ' 20', str(point.imag/1000)]
     if full:
         result += [' 30', '0.0']
     return result
