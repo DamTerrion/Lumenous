@@ -3,7 +3,7 @@ from time import ctime, time as now
 from local import say, ask
 import clearing
 
-lang = 'ru'
+lang = 'RU'
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -162,5 +162,5 @@ while __name__ == '__main__':
     ## Цикл выполняется, если это главный скрипт,
     ##  а не импортированный
     code = ask('Input name of DXF-file for processing:', lang)
-    if code in ('quit', 'exit', 'выход', 'конец', 'хватит') : break
+    if code.lower() in ('quit', 'exit', 'выход', 'конец', 'хватит') : break
     ndxf(code)

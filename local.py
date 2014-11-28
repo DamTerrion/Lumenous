@@ -13,6 +13,7 @@ Actualy phrases = [
     "Can't replace this file to '/bak'!",
     "Can't understand",
     'Clearing aborted',
+    'Clearing activated',
     'Deleted',
     'Done!',
     'Few files was deleted.',
@@ -57,6 +58,9 @@ dictionary['ru'] = {
     
     'Clearing aborted':
         'Чистка отменена',
+    
+    'Clearing activated':
+        'Чистка запущена',
     
     'Deleted':
         'Удалено',

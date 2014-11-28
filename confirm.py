@@ -1,3 +1,7 @@
+from local import say, ask
+
+lang = 'RU'
+
 def confirm (status=None, recursive=False):
     right = ('д', 'да', 'верно', 'истина', 'истинно',
              'y', 'yes', 'yeah', 'right', 'true')
@@ -29,6 +33,6 @@ def confirm (status=None, recursive=False):
             if not new.isdigit():
                 return confirm ('FaultInt', recursive)
             else: return confirm (int(new), recursive)
-        if status in right: return True
-        elif status in wrong: return False
+        if   status.lower() in right: return True
+        elif status.lower() in wrong: return False
         else: return confirm('FaultStr', recursive)
