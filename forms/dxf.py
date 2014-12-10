@@ -1,7 +1,7 @@
 def load (file):
     # Loading data from file
     def structurize ():
-    pass
+        pass
 
 def gen (kind, params, layer='0', colour='0'):
     # Generation of dxf-objects in list-style
@@ -26,7 +26,8 @@ def gen (kind, params, layer='0', colour='0'):
         pass
     def circle (x, y, r, layer='0'):
         pass
-    def arc (p1, p2, a, layer='0')
+    def arc (p1, p2, a, layer='0'):
+        pass
 
 def create (stack):
     # Parcing dxf-list to text
