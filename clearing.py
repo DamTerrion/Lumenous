@@ -38,7 +38,7 @@ def bak (days=60, direction='bak'):
                               )
                     count += 1
     log.write(
-        ''.join(('------------------------\t', str(count), '\n'))
+        ''.join(('------------------------\t', str(count), '\n\n'))
               )
     log.close()
     return count
