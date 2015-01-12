@@ -156,11 +156,16 @@ if __name__ == '__main__':
     ## Подчистка мусора на выбор пользователя,
     ##  если этот скрипт запущен как основной,
     ##  а не импортирован из другого скрипта.
+    lastname = False
  
 while __name__ == '__main__':
     # Loop working only if it is a main script
     ## Цикл выполняется, если это главный скрипт,
     ##  а не импортированный
     code = ask('Input name of DXF-file for processing:', lang)
+    if not code and lastname:
+        code = lastname
+    else:
+        lastname = code
     if code.lower() in ('quit', 'exit', 'выход', 'конец', 'хватит') : break
     ndxf(code)
