@@ -4,6 +4,7 @@ from local import say, ask
 import clearing
 
 lang = 'RU'
+Roundy = False
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -86,6 +87,10 @@ def ndxf (dxf_name):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
+                    if Roundy and int(Param[1:-1]) in range(10, 60):
+                        Value = ''.join((
+                            str(round(float(Value[:-1]), Roundy)),
+                            Value[-1]))
                     new = ''.join((new, Param, Value))
         else:
             # Section is ended, data's writing can be completed
