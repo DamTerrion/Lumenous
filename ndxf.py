@@ -3,8 +3,20 @@ from time import ctime, time as now
 from local import say, ask
 import clearing
 
-lang = 'RU'
+lang = 'EN'
 Roundy = False
+config = False
+
+try:
+    config = open('ndxf.conf')
+    for line in config:
+        if 'language' in line:
+            lang = line.partition(' = ')[2].strip()
+        if 'round' in line:
+            Roundy = int(line.partition(' = ')[2].strip())
+    config.close()
+except Exception:
+    pass
 
 def ndxf (dxf_name):
     new = Param = Value = ''
@@ -21,6 +33,16 @@ def ndxf (dxf_name):
     except FileNotFoundError:
         say('File not found', lang)
         return False
+    
+    '''
+    if config:
+        config = open('ndxf.conf')
+        for line in config:
+            if 'round' in line:
+                Roundy = int(line.find(' = ')[2])
+        config.close()
+    if Roundy: print('round base =', Roundy)
+    '''
     
     Allowed = { '_INIT_':    (' 0', ' 8'),
                             # Name & layer for every object
