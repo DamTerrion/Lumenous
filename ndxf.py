@@ -10,7 +10,7 @@ try:
     config = open('ndxf.conf')
     for line in config:
         if 'language' in line.lower():
-            lang = line.partition(' = ')[2].strip()
+            lang = line.partition('=')[2].strip()
     config.close()
 except Exception:
     pass
@@ -72,7 +72,7 @@ def ndxf (dxf_name):
         config = open('ndxf.conf')
         for line in config:
             if 'round' in line.lower():
-                round_base = int(line.find(' = ')[2])
+                round_base = int(line.partition('=')[2].strip())
         config.close()
     except Exception:
         pass
@@ -112,7 +112,7 @@ def ndxf (dxf_name):
                     ##  объект-параметр, она записывается
                     if Roundy and int(Param[1:-1]) in range(10, 60):
                         Value = ''.join((
-                            str(round(float(Value[:-1]), Roundy)),
+                            str(round(float(Value[:-1]), round_base)),
                             Value[-1]))
                     new = ''.join((new, Param, Value))
         else:
