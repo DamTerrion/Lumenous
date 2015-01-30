@@ -4,22 +4,56 @@ from local import say, ask
 import clearing
 
 lang = 'EN'
-Roundy = False
 config = False
 
 try:
     config = open('ndxf.conf')
     for line in config:
-        if 'language' in line:
+        if 'language' in line.lower():
             lang = line.partition(' = ')[2].strip()
-        if 'round' in line:
-            Roundy = int(line.partition(' = ')[2].strip())
     config.close()
 except Exception:
     pass
 
 def ndxf (dxf_name):
     new = Param = Value = ''
+    round_base = False
+    start_tm = now()
+    
+    Allowed = { '_INIT_':    (' 0', ' 8'),
+                            # Name & layer for every object
+                            ## Имя и слой для любого объекта
+                'POLYLINE':  ('40', '41',
+                            # Start & end width for polyline
+                            ## Начальная и конечная ширина полилинии
+                              '66', '70'),
+                            # Flags for primitives & enclosed
+                            ## Флаги примитивов и замкнутости
+                'SOLID':     ('10', '20',
+                              '11', '21',
+                              '12', '22',
+                              '13', '23'),
+                            # Coordinates for four vertexs
+                            ## Координаты четырёх вершин
+                'VERTEX':    ('10', '20', '42'),  
+                            # Single vertex coordinates & сovexity of line
+                            ## Координаты отдельной вершины и выпуклость
+                'LINE':      ('10', '20',
+                              '11', '21'),
+                            # Coord-s of line's start & end
+                            ## Координаты начала и конца отрезка
+                'ARC':       ('10', '20',
+                            # Center's coord-s of arc
+                            ## Координаты центра дуги
+                              '40', '50', '51'),
+                            # Radius, starting & ending angles
+                            ## Радиус, начальный и конечный углы дуги
+                'CIRCLE':    ('10', '20', '40'),
+                            # Center's coord-s & radius of circle
+                            ## Координаты центра и радиус окружности
+                'SEQEND':    ()}
+                            # End of compound object
+                            ## Конец составных объектов (полилинии)
     
     if not dxf_name.endswith('.dxf'):
         dxf_name += '.dxf'
@@ -34,48 +68,15 @@ def ndxf (dxf_name):
         say('File not found', lang)
         return False
     
-    '''
-    if config:
+    try:
         config = open('ndxf.conf')
         for line in config:
-            if 'round' in line:
-                Roundy = int(line.find(' = ')[2])
+            if 'round' in line.lower():
+                round_base = int(line.find(' = ')[2])
         config.close()
-    if Roundy: print('round base =', Roundy)
-    '''
-    
-    Allowed = { '_INIT_':    (' 0', ' 8'),
-                            # Name & layer for every object
-                            ## Имя и слой для любого объекта
-                'POLYLINE':  ('40', '41',
-                            # Start & end width for polyline
-                            ## Начальная и конечная ширина полилинии
-                              '66', '70'),
-                            # Flags for primitives & enclosed
-                            ## Флаги примитивов и замкнутости
-                'SOLID':     ('10', '20', '11', '21', '12', '22', '13', '23'),
-                            # Coordinates for four vertexs
-                            ## Координаты четырёх вершин
-                'VERTEX':    ('10', '20', '42'),  
-                            # Single vertex coordinates & сovexity of line
-                            ## Координаты отдельной вершины и выпуклость
-                'LINE':      ('10', '20', '11', '21',),
-                            # Coord-s of line's start & end
-                            ## Координаты начала и конца отрезка
-                'ARC':       ('10', '20',
-                            # Center's coord-s of arc
-                            ## Координаты центра дуги
-                              '40', '50', '51'),
-                            # Radius, starting & ending angles
-                            ## Радиус, начальный и конечный углы дуги
-                'CIRCLE':    ('10', '20', '40'),
-                            # Center's coord-s & radius of circle
-                            ## Координаты центра и радиус окружности
-                'SEQEND':    ()}
-                            # Object "polyline is ends here"
-                            ## Объект завершения полилинии
-    
-    start_tm = now()
+    except Exception:
+        pass
+    if round_base: print('round base =', round_base)
     
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
         # Till 'Entities' section starts file just viewed
