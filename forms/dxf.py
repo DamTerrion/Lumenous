@@ -3,13 +3,13 @@ def load (file):
     def structurize ():
         pass
 
-def gen (kind, params, layer='0', colour='0'):
+def gen (*params, kind=None, layer='0', colour='0'):
     # Generation of dxf-objects in list-style
-    def poly (params, layer='0'):
-        if isinstance(params, Exponion):
+    def poly (*params, layer='0', colour='0', width='0'):
+        if len(params)=1 and isinstance(params, Exponion):
             # Polyline generation from Exponion
             pass
-        if isinstance(params, dict):
+        if len(params)>1:
             pass
         pass
     def solid (params, layer='0'):
