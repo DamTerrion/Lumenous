@@ -18,8 +18,7 @@ def getline(name=False):
         # Стэк - список точек, представленных списками координат
     file.close()
     
-    splited_name = name.split('.')
-    dxf_name = splited_name[0]+'.dxf'
+    dxf_name = ''.join(( name[:name.rfind('.')], '.dxf' ))
     dxf = open (dxf_name, 'w')
     # Создаётся новый файл, но после первой точки в названии исходного файла
     #  ставится расширение .dxf
