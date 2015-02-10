@@ -75,7 +75,7 @@ def ndxf (dxf_name):
                 round_base = int(line.partition('=')[2].strip())
         config.close()
     except Exception:
-        pass
+        round_base = False
     if round_base: print('round base =', round_base)
     
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
@@ -110,7 +110,7 @@ def ndxf (dxf_name):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
-                    if Roundy and int(Param[1:-1]) in range(10, 60):
+                    if round_base and int(Param[1:-1]) in range(10, 60):
                         Value = ''.join((
                             str(round(float(Value[:-1]), round_base)),
                             Value[-1]))
