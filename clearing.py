@@ -34,7 +34,7 @@ def bak (days=60, direction='bak'):
                               )
                 else:
                     log.write(
-                        ''.join(('\t', file, '\t', ctime(last), '\n'))
+                        ''.join(('\t', file, tt, ctime(last), '\n'))
                               )
                     count += 1
     log.write(
