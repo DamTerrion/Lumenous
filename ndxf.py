@@ -3,21 +3,32 @@ from time import ctime, time as now
 from local import say, ask
 import clearing
 
-lang = 'EN'
-config = False
+config = {'language': 'EN',
+          'round': False,
+          'backs': 'bak',
+          'clean': 'not',
+          'period': 30,
+          'report': 'yes'}
 
 try:
-    config = open('ndxf.conf')
-    for line in config:
-        if 'language' in line.lower():
-            lang = line.partition('=')[2].strip()
-    config.close()
+    configuration_file = open('ndxf.conf')
+    for line in configuration_file:
+        if line.find('=') > 0:
+            sett_name = line.partition('=')[0].strip()
+            sett_value = line.partition('=')[2].strip()
+            if (sett_name.isalnum() and
+                sett_value.isalnum):
+                if sett_value.isdigit(): sett_value = int(sett_value)
+                elif sett_value == 'True': sett_value = 1
+                elif sett_value == 'False': sett_value = 0
+                config[sett_name.lower()] = sett_value
 except Exception:
-    pass
+    print ('Problem with configuration file')
+finally:
+    configuration_file.close()
 
-def ndxf (dxf_name):
+def ndxf (dxf_name, round_base=False):
     new = Param = Value = ''
-    round_base = False
     start_tm = now()
     
     Allowed = { '_INIT_':    (' 0', ' 8'),
@@ -65,17 +76,9 @@ def ndxf (dxf_name):
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
-        say('File not found', lang)
+        say('File not found', config['language'])
         return False
     
-    try:
-        config = open('ndxf.conf')
-        for line in config:
-            if 'round' in line.lower():
-                round_base = int(line.partition('=')[2].strip())
-        config.close()
-    except Exception:
-        round_base = False
     if round_base: print('round base =', round_base)
     
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
@@ -87,8 +90,9 @@ def ndxf (dxf_name):
     else :
         # When 'Entites' starts it's write header
         ## Если же раздел ENTITIES начался, записывается его заголовок
-        new = ''.join(('  0\n', 'SECTION\n',
-                       '  2\n', 'ENTITIES\n'))
+        new = '\n'.join(('  0', 'SECTION',
+                         '  2', 'ENTITIES',
+                         ''))
         inObject = ''
         
         while not (Param == '  0\n' and Value == 'ENDSEC\n'):
@@ -127,7 +131,7 @@ def ndxf (dxf_name):
     try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
     except Exception:
         replace (dxf_name, dxf_name+'.bak')
-        say("Can't replace this file to '/bak'!", lang)
+        say("Can't replace this file to '/bak'!", config['language'])
     # Обрабатывавшийся файл <name>.dxf превращается в bak/<name>.dxf.bak
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
@@ -150,7 +154,7 @@ def ndxf (dxf_name):
                              ctime(now()), '\n'
                              )))
         log.close()
-        say('Mistake was made during processing', lang)
+        say('Mistake was made during processing', config['language'])
         # If was found an exception, it's logging to log
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
@@ -170,15 +174,23 @@ def ndxf (dxf_name):
         # If wasn't found any exceptions, processe's information logging
         # Если не возникло ошибок, в лог выводится информация об обработке
         
-        print(say('All done in', lang, 'np'), job_tm, say('s.', lang, 'np'))
+        print(say('All done in', config['language'], 'np'),
+              job_tm, say('s.', config['language'], 'np'))
 
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
 
 if __name__ == '__main__':
-    need = ask('Activate clearing? (Yes/Not/Days)', lang)
-    clearing.call(need)
+    if config['clean'].lower() == 'manual':
+        clean_need = ask('Activate clearing? (Yes/Not/Days)',
+                         config['language'])
+    elif (config['clean'].lower() in ('auto', 'yes', 1) and
+          'period' in config):
+        clean_need = config['period']
+    elif config['clean'].lower() in ('not', 'no', 0):
+        clean_need = False
+    clearing.call(clean_need)
     # Garbage cleaning from user's choice
     #  if this script is main script
     ## Подчистка мусора на выбор пользователя,
@@ -190,7 +202,7 @@ while __name__ == '__main__':
     # Loop working only if it is a main script
     ## Цикл выполняется, если это главный скрипт,
     ##  а не импортированный
-    code = ask('Input name of DXF-file for processing:', lang)
+    code = ask('Input name of DXF-file for processing:', config['language'])
     if not code and lastname:
         code = lastname
     else:

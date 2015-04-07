@@ -4,9 +4,9 @@ lang = 'RU'
 
 def confirm (status=None, recursive=False):
     right = ('д', 'да', 'верно', 'истина', 'истинно',
-             'y', 'yes', 'yeah', 'right', 'true')
+             'y', 'yes', 'yeah', 'right', 'true', True)
     wrong = ('н', 'нет', 'неверно', 'ошибка', 'ошибочно',
-             'n', 'no', 'not', 'wrong', 'false')
+             'n', 'no', 'not', 'wrong', 'false', False)
     
     if status == None:
         sure = ask('Are you sure?', lang)
