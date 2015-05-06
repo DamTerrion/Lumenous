@@ -72,7 +72,7 @@ def ndxf (dxf_name, round_base=False):
     
     try:
         dxf = open (dxf_name, 'r')
-        fsize = str(round(path.getsize(dxf_name)/1024, 1))
+        fsize = path.getsize(dxf_name)/1024
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
@@ -136,7 +136,12 @@ def ndxf (dxf_name, round_base=False):
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    job_tm = str(round(now() - start_tm, 3))
+    job_tm = now() - start_tm
+    speed  = fsize / job_tm
+    
+    fsize  = str(round(fsize,  1))
+    job_tm = str(round(job_tm, 3))
+    speed  = str(round(speed,  1))
 
     # Name of origin file was changed, and it recreating
     ## Так как имя исходного файла сменилось, он создаётся заново
@@ -167,7 +172,8 @@ def ndxf (dxf_name, round_base=False):
                            full_name[0],  t0, '|  ',
                            job_tm, ' s.', t2, '|  ',
                            fsize, ' kB.', t3, '|  ',
-                           ctime(now()), '\n'
+                           ctime(now()), '\t','|  ',
+                           speed, 'kB/s', '\n'
                            ))
                   )
         log.close()        
@@ -177,6 +183,18 @@ def ndxf (dxf_name, round_base=False):
         print(say('All done in', config['language'], 'np'),
               job_tm, say('s.', config['language'], 'np'))
 
+def loop (lastname=None):
+    # This loop is repeatedly asking file name and operate with this file
+    ## Здесь циклически спрашивается имя файла и этот файл обрабатывается
+    while True:
+        code = ask('Input name of DXF-file for processing:', config['language'])
+        if not code and lastname:
+            code = lastname
+        else:
+            lastname = code
+        quit_conditions = ('quit', 'exit', 'выход', 'конец', 'хватит')
+        if code.lower() in quit_conditions: break
+        ndxf(code)
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
@@ -196,16 +214,5 @@ if __name__ == '__main__':
     ## Подчистка мусора на выбор пользователя,
     ##  если этот скрипт запущен как основной,
     ##  а не импортирован из другого скрипта.
-    lastname = False
- 
-while __name__ == '__main__':
-    # Loop working only if it is a main script
-    ## Цикл выполняется, если это главный скрипт,
-    ##  а не импортированный
-    code = ask('Input name of DXF-file for processing:', config['language'])
-    if not code and lastname:
-        code = lastname
-    else:
-        lastname = code
-    if code.lower() in ('quit', 'exit', 'выход', 'конец', 'хватит') : break
-    ndxf(code)
+    
+    loop()
