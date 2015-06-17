@@ -1,3 +1,5 @@
+from os.path import exists
+
 def prepare (FILES):
     STACK = {}
     X = Y = H = W = ''
@@ -48,28 +50,43 @@ def prepare (FILES):
         F1.close()
     return STACK
 
-def combine (STACK, name='result.opt'):
+def combine (STACK, result_name=None):
+    while not result_name:
+        result_name = input('Имя выходного файла: ')
+        if exist(result_name):
+            confirming = input('Подтверждаете перезапись? ')
+            if confirming.lower() in ('n', 'no', 'not'
+                                      'н', 'не', 'нет'):
+                result_name = None
     F2 = open(name, 'w')
     for item in sorted(STACK):
         F2.write(STACK[item])
     F2.write('$;\n')
     F2.close()
-    print ('Done!')
+    print ('Done!\n')
 
 def read_names ():
     name = False
     NAMES = []
+    count = 0
     while not name in ('quit', 'exit', 'enought',
                        'конец', 'выход', 'хватит'):
         name = input('Введите имя файла: ')
         if not name in ('quit', 'exit', 'enought',
                         'конец', 'выход', 'хватит'):
-            NAMES.append(name)
+            if exists(name): NAMES.append(name)
+            count += 1
         else: break
-    print('Считано имён: %1' %len(NAMES))
-    return NAMES
+    if count:
+        print('Считано имён: %i/%i' %(len(NAMES), count))
+    return NAMES, count
+
+def loop ():
+    while True:
+        NAMES, count = read_names()
+        if not count: break
+        DATA = prepare(NAMES)
+        combine(DATA)
 
 if __name__ == '__main__':
-    NAMES = read_names()
-    DATA = prepare(NAMES)
-    combine(DATA, input('Имя выходного файла: '))
+    loop()
