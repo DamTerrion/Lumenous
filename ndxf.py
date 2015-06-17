@@ -27,7 +27,7 @@ except Exception:
 finally:
     configuration_file.close()
 
-def ndxf (dxf_name, round_base=False):
+def ndxf (dxf_name, round_base=False, draw=False):
     new = Param = Value = ''
     start_tm = now()
     
@@ -68,16 +68,18 @@ def ndxf (dxf_name, round_base=False):
     
     if not dxf_name.endswith('.dxf'):
         dxf_name += '.dxf'
-    print (dxf_name)
     
     try:
         dxf = open (dxf_name, 'r')
+        print(dxf_name)
         fsize = path.getsize(dxf_name)/1024
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
-        say('File not found', config['language'])
-        return False
+        if draw:
+            print(dxf_name)
+            say('File not found', config['language'])
+        return None
     
     if round_base: print('round base =', round_base)
     
@@ -194,7 +196,7 @@ def loop (lastname=None):
             lastname = code
         quit_conditions = ('quit', 'exit', 'выход', 'конец', 'хватит')
         if code.lower() in quit_conditions: break
-        ndxf(code)
+        ndxf(code, draw=True)
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
