@@ -53,12 +53,12 @@ def prepare (FILES):
 def combine (STACK, result_name=None):
     while not result_name:
         result_name = input('Имя выходного файла: ')
-        if exist(result_name):
+        if exists(result_name):
             confirming = input('Подтверждаете перезапись? ')
             if confirming.lower() in ('n', 'no', 'not'
                                       'н', 'не', 'нет'):
                 result_name = None
-    F2 = open(name, 'w')
+    F2 = open(result_name, 'w')
     for item in sorted(STACK):
         F2.write(STACK[item])
     F2.write('$;\n')
@@ -70,15 +70,20 @@ def read_names ():
     NAMES = []
     count = 0
     while not name in ('quit', 'exit', 'enought',
-                       'конец', 'выход', 'хватит'):
+                       'конец', 'выход', 'хватит',
+                       '>'):
         name = input('Введите имя файла: ')
         if not name in ('quit', 'exit', 'enought',
-                        'конец', 'выход', 'хватит'):
+                        'конец', 'выход', 'хватит',
+                        '>'):
             if exists(name): NAMES.append(name)
             count += 1
         else: break
     if count:
-        print('Считано имён: %i/%i' %(len(NAMES), count))
+        if len(NAMES):
+            print('Считано имён: %i/%i' %(len(NAMES), count))
+        else:
+            print('Ни одного файла не найдено.')
     return NAMES, count
 
 def loop ():
