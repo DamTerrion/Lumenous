@@ -83,11 +83,29 @@ def ndxf (dxf_name, round_base=False, draw=False):
     
     if round_base: print('round base =', round_base)
     
+    '''
+    block_list = {'no_name': list()}
+    in_block = False
+    '''
+    
     while not (Param == '  2\n' and Value == 'ENTITIES\n'):
         # Till 'Entities' section starts file just viewed
         ## Если не начался раздел ENTITIES, файл просто просматривается
         Param = dxf.readline()
         Value = dxf.readline()
+
+        '''
+        if Param == '  0\n' and Value == 'BLOCK\n':
+            in_block = 'no_name'
+        if in_block:
+            block_list[in_block].append((Param, Value))
+        if in_block == 'no_name' and Param == '  2\n':
+            ## Когда блок получает имя, все его данные перезаписываются
+            ##  в новую ячейку, а ячейка 'no_name' очищается
+            in_block = Value[:-1]
+            block_list[in_block] = list().extend(block_list['no_name'])
+            block_list['no_name'] = list()
+        '''
         
     else :
         # When 'Entites' starts it's write header
@@ -97,11 +115,16 @@ def ndxf (dxf_name, round_base=False, draw=False):
                          ''))
         inObject = ''
         
+        insertion_found = False
+        
         while not (Param == '  0\n' and Value == 'ENDSEC\n'):
             # Loop working until section will ended
             ## Цикл работает до тех пор, пока не закончится раздел
             Param = dxf.readline()
             Value = dxf.readline()
+            
+            if Value == 'INSERT\n' and not insertion_found:
+                say('Insertion!', config['language'])
             
             if Param == '  0\n' :
                 inObject = Value[:-1]
@@ -121,6 +144,7 @@ def ndxf (dxf_name, round_base=False, draw=False):
                             str(round(float(Value[:-1]), round_base)),
                             Value[-1]))
                     new = ''.join((new, Param, Value))
+        
         else:
             # Section is ended, data's writing can be completed
             ## Раздел кончился, можно завершить запись данных
