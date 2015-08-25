@@ -19,15 +19,31 @@ try:
             if (sett_name.isalnum() and
                 sett_value.isalnum):
                 if sett_value.isdigit(): sett_value = int(sett_value)
-                elif sett_value == 'True': sett_value = 1
-                elif sett_value == 'False': sett_value = 0
+                elif sett_value == 'True': sett_value = True
+                elif sett_value == 'False': sett_value = False
                 config[sett_name.lower()] = sett_value
 except Exception:
     print ('Problem with configuration file')
+    configuration_file = open('ndxf.conf', 'w')
+    configuration_text = [
+        '-= nDXF configuration settings =-', '\n',
+        '\n',
+        'language = ',  config['language'], '\n',
+        'round = ',     config['round'],    '\n',
+        'backs = ',     config['backs'],    '\n',
+        '\n',
+        '- cleaning -', '\n',
+        'clean = ',     config['clean'],    '\n',
+        'period = ',    config['period'],   '\n',
+        'report = ',    config['report'],   '\n'
+        ]
+    configuration_file.write(
+        ''.join(configuration_text)
+        )
 finally:
     configuration_file.close()
 
-def ndxf (dxf_name, round_base=False, draw=False):
+def ndxf (dxf_name, rounds=config['round'], draw=False):
     new = Param = Value = ''
     start_tm = now()
     
@@ -81,7 +97,7 @@ def ndxf (dxf_name, round_base=False, draw=False):
             say('File not found', config['language'])
         return None
     
-    if round_base: print('round base =', round_base)
+    if rounds: print('round base =', round_base)
     
     '''
     block_list = {'no_name': list()}
