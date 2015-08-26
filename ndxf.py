@@ -10,6 +10,24 @@ config = {'language': 'EN',
           'period': 30,
           'report': 'yes'}
 
+def export_config (file_name='ndxf.conf', export=config):
+    export_file = open(file_name, 'w')
+    export_text = ['-= nDXF configuration settings =-', '\n']
+    
+    export_text.extend(('\n', '- main -', '\n'))
+    for entry in ('language', 'round', 'back'):
+        if entry in export:
+            export_text.extend((entry, ' = ', export[entry], '\n'))
+    
+    export_text.extend(('\n', '- cleaning -', '\n'))
+    for entry in ('clean', 'period', 'report'):
+        if entry in export:
+            export_text.extend((entry, ' = ', export[entry], '\n'))
+    
+    configuration_file.write(
+        ''.join(configuration_text)
+        )
+
 try:
     configuration_file = open('ndxf.conf')
     for line in configuration_file:
@@ -23,23 +41,7 @@ try:
                 elif sett_value == 'False': sett_value = False
                 config[sett_name.lower()] = sett_value
 except Exception:
-    print ('Problem with configuration file')
-    configuration_file = open('ndxf.conf', 'w')
-    configuration_text = [
-        '-= nDXF configuration settings =-', '\n',
-        '\n',
-        'language = ',  config['language'], '\n',
-        'round = ',     config['round'],    '\n',
-        'backs = ',     config['backs'],    '\n',
-        '\n',
-        '- cleaning -', '\n',
-        'clean = ',     config['clean'],    '\n',
-        'period = ',    config['period'],   '\n',
-        'report = ',    config['report'],   '\n'
-        ]
-    configuration_file.write(
-        ''.join(configuration_text)
-        )
+    print ('Problem with configuration file')    
 finally:
     configuration_file.close()
 
@@ -97,7 +99,7 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
             say('File not found', config['language'])
         return None
     
-    if rounds: print('round base =', round_base)
+    if rounds: print('round base =', rounds)
     
     '''
     block_list = {'no_name': list()}
@@ -155,9 +157,9 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
-                    if round_base and int(Param[1:-1]) in range(10, 60):
+                    if rounds and int(Param[1:-1]) in range(10, 60):
                         Value = ''.join((
-                            str(round(float(Value[:-1]), round_base)),
+                            str(round(float(Value[:-1]), rounds)),
                             Value[-1]))
                     new = ''.join((new, Param, Value))
         
