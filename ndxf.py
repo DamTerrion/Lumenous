@@ -99,7 +99,7 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
             say('File not found', config['language'])
         return None
     
-    if rounds: print('round base =', rounds)
+    if rounds and rounds < 5: print('round base =', rounds)
     
     '''
     block_list = {'no_name': list()}
