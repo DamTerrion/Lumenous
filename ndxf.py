@@ -4,7 +4,7 @@ from local import say, ask
 import clearing
 
 config = {'language': 'EN',
-          'round': False,
+          'round': 5,
           'backs': 'bak',
           'clean': 'not',
           'period': 30,
