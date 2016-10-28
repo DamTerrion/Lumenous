@@ -64,6 +64,9 @@ dictionary['ru'] = {
     
     'Deleted':
         'Удалено',
+
+    'Deleted1':
+        'Удалён',
     
     'Done!':
 	'Готово!',

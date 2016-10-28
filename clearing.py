@@ -69,13 +69,17 @@ def need_clear (days=45):
     ######
     if (count%10 == 1 and
         count%100 != 11):
+        deleted = say('Deleted1', lang, 'noprint')
         few_files = 'файл.'
     elif (count%10 in (2, 3, 4) and
         not count%100 in (12, 13, 14)):
+        deleted = say('Deleted', lang, 'noprint')
         few_files = 'файла.'
-    else: few_files = 'файлов.'
+    else:
+        deleted = say('Deleted', lang, 'noprint')
+        few_files = 'файлов.'
     ######
-    print (say('Deleted', lang, 'noprint'), count, few_files)
+    print (deleted, count, few_files)
 
 if __name__ == '__main__':
     days = ask('Input maximum limitation of files:', lang)
