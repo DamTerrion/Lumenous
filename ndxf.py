@@ -4,7 +4,7 @@ from local import say, ask
 import clearing
 
 config = {'language': 'EN',
-          'round': 5,
+          'round': 3.25,
           'backs': 'bak',
           'clean': 'not',
           'period': 30,
@@ -24,28 +24,44 @@ def export_config (file_name='ndxf.conf', export=config):
         if entry in export:
             export_text.extend((entry, ' = ', export[entry], '\n'))
     
-    configuration_file.write(
-        ''.join(configuration_text)
+    conf_file.write(
+        ''.join(export_text)
         )
 
-try:
-    configuration_file = open('ndxf.conf')
-    for line in configuration_file:
-        if line.find('=') > 0:
-            sett_name = line.partition('=')[0].strip()
-            sett_value = line.partition('=')[2].strip()
-            if (sett_name.isalnum() and
-                sett_value.isalnum):
-                if sett_value.isdigit(): sett_value = int(sett_value)
-                elif sett_value == 'True': sett_value = True
-                elif sett_value == 'False': sett_value = False
-                config[sett_name.lower()] = sett_value
-except Exception:
-    print ('Problem with configuration file')    
-finally:
-    configuration_file.close()
+def import_conf (conf_name='ndxf.conf'):
+    try:
+        conf_file = open(conf_name)
+        for line in conf_file:
+            if line.find('=') > 0:
+                set_name = line.partition('=')[0].strip()
+                set_value = line.partition('=')[2].strip()
+                if (set_name.isalnum() and
+                    set_value.isalnum):
+                    if set_value.isdigit(): set_value = int(set_value)
+                    elif set_value == 'True': set_value = True
+                    elif set_value == 'False': set_value = False
+                    config[set_name.lower()] = set_value
+    except Exception:
+        print ('Problem with configuration file')
+    finally:
+        conf_file.close()
+        return config
 
-def ndxf (dxf_name, rounds=config['round'], draw=False):
+def adv_round (value, base=3):
+    # Позволяет использовать нецелые основания для округления.
+    # При основании 3.50, число 0.34871 округлится до 0.3485
+    # При основании 3.25, число 0.34871 округлится до 0.34875
+    # При основании 3.30, число 0.34871 округлится до 0.348666(7)
+    # При основании 3.10, число 0.34871 округлится как при основании 4
+    quot, tail = int(base // 1), base % 1
+    inc = 1
+    if tail > 0.5:
+        tail = 1 - tail
+    if tail: inc = round (1 / tail)
+    value = round (value * inc, quot) / inc
+    return value
+
+def ndxf (dxf_name, round_base=config['round'], draw=False):
     new = Param = Value = ''
     start_tm = now()
     
@@ -99,7 +115,7 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
             say('File not found', config['language'])
         return None
     
-    if rounds and rounds < 5: print('round base =', rounds)
+    if round_base and round_base != 3.25: print('round base =', round_base)
     
     '''
     block_list = {'no_name': list()}
@@ -157,9 +173,9 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
-                    if rounds and int(Param[1:-1]) in range(10, 60):
+                    if round_base and int(Param[1:-1]) in range(10, 60):
                         Value = ''.join((
-                            str(round(float(Value[:-1]), rounds)),
+                            str(adv_round(float(Value[:-1]), round_base)                                ),
                             Value[-1]))
                     new = ''.join((new, Param, Value))
         
@@ -244,6 +260,8 @@ __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
 
 if __name__ == '__main__':
+    import_conf()
+    
     if config['clean'].lower() == 'manual':
         clean_need = ask('Activate clearing? (Yes/Not/Days)',
                          config['language'])
