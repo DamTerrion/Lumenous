@@ -3,14 +3,43 @@ from time import ctime, time as now
 from local import say, ask
 import clearing
 
-config = {'language': 'EN',
-          'round': 3.25,
-          'backs': 'bak',
-          'clean': 'not',
-          'period': 30,
-          'report': 'yes'}
+default_config = 'ndxf.conf'
+reserve_config = {'language': 'EN',
+                  'round': 3.25,
+                  'backs': 'bak',
+                  'clean': 'not',
+                  'period': 30,
+                  'report': 'yes'}
 
-def export_config (file_name='ndxf.conf', export=config):
+def import_config (conf_name=default_config):
+    imported = dict()
+    try:
+        conf_file = open(conf_name)
+        for line in conf_file:
+            if line.find('=') > 0:
+                set_name = line.partition('=')[0].strip()
+                set_value = line.partition('=')[2].strip()
+                if (set_name.isalnum() and
+                    set_value.isalnum):
+                    if set_value.isdigit(): set_value = int(set_value)
+                    elif set_value == 'True': set_value = True
+                    elif set_value == 'False': set_value = False
+                    elif set_value == 'None': set_value = None
+                    imported[set_name.lower()] = set_value
+    except FileNotFoundError:
+        if conf_name == default_config:
+            export_config(default_config, reserve_config)
+        return reserve_config
+    except Exception:
+        print ('Problem with configuration file')
+    finally:
+        conf_file.close()
+        return imported
+
+config = import_config()
+# Обязательный импорт параметров из внешнего файла
+
+def export_config (file_name=default_config, export=config):
     export_file = open(file_name, 'w')
     export_text = ['-= nDXF configuration settings =-', '\n']
     
@@ -27,38 +56,22 @@ def export_config (file_name='ndxf.conf', export=config):
     conf_file.write(
         ''.join(export_text)
         )
+    return True
 
-def import_conf (conf_name='ndxf.conf'):
-    try:
-        conf_file = open(conf_name)
-        for line in conf_file:
-            if line.find('=') > 0:
-                set_name = line.partition('=')[0].strip()
-                set_value = line.partition('=')[2].strip()
-                if (set_name.isalnum() and
-                    set_value.isalnum):
-                    if set_value.isdigit(): set_value = int(set_value)
-                    elif set_value == 'True': set_value = True
-                    elif set_value == 'False': set_value = False
-                    config[set_name.lower()] = set_value
-    except Exception:
-        print ('Problem with configuration file')
-    finally:
-        conf_file.close()
-        return config
-
-def adv_round (value, base=3):
+def adv_round (value, base=config['round']):
+    if (base is False) or (base is None): return value
     # Позволяет использовать нецелые основания для округления.
     # При основании 3.50, число 0.34871 округлится до 0.3485
     # При основании 3.25, число 0.34871 округлится до 0.34875
-    # При основании 3.30, число 0.34871 округлится до 0.348666(7)
+    # При основании 3.30, число 0.34871 округлится до 0.34867
     # При основании 3.10, число 0.34871 округлится как при основании 4
     quot, tail = int(base // 1), base % 1
     inc = 1
     if tail > 0.5:
         tail = 1 - tail
-    if tail: inc = round (1 / tail)
-    value = round (value * inc, quot) / inc
+    if tail > 0.1: inc = round (1 / tail)
+    elif tail != 0: quot += 1
+    value = round (round (value * inc, quot) / inc, quot+2)
     return value
 
 def ndxf (dxf_name, round_base=config['round'], draw=False):
@@ -105,17 +118,16 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
     
     try:
         dxf = open (dxf_name, 'r')
-        print(dxf_name)
         fsize = path.getsize(dxf_name)/1024
+        print(dxf_name+",", round(fsize,2), "kB")
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
         if draw:
-            print(dxf_name)
-            say('File not found', config['language'])
+            print(dxf_name, "-",
+                  say('File not found', config['language'], 'np')
+                  )
         return None
-    
-    if round_base and round_base != 3.25: print('round base =', round_base)
     
     '''
     block_list = {'no_name': list()}
@@ -258,9 +270,7 @@ def loop (lastname=None):
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
-
 if __name__ == '__main__':
-    import_conf()
     
     if config['clean'].lower() == 'manual':
         clean_need = ask('Activate clearing? (Yes/Not/Days)',
