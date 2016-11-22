@@ -253,7 +253,9 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
         # Если не возникло ошибок, в лог выводится информация об обработке
         
         print(say('All done in', config['language'], 'np'),
-              job_tm, say('s.', config['language'], 'np'))
+              job_tm,
+              say('s.', config['language'], 'np'),
+              '\n')
 
 def loop (lastname=None):
     # This loop is repeatedly asking file name and operate with this file
