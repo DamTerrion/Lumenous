@@ -58,6 +58,53 @@ def export_config (file_name=default_config, export=config):
         )
     return True
 
+def get_log (full_name, start_time, file_size, error=None):
+    log_file = ''.join((config['backs'],
+                        '/',
+                        'processed.log'
+                        ))    
+    now_time = now()    
+    t1 = '\t'*(4 - (0+len(full_name[1])) //4)
+    t0 = '\t'*(5 - (3+len(full_name[0])) //4)
+    
+    if error:
+        result = ''.join((str(error), ':', '\t',
+                          full_name[1], t1, '|  ',
+                          full_name[0], t0, '|  ',
+                          ctime(now_time), '\n'
+                          ))
+    else:
+        job_time = now_time - start_time
+        speed  = file_size / job_time
+
+        file_size  = str(round(file_size,  1))
+        job_time = str(round(job_time, 3))
+        speed  = str(round(speed,  1))
+        
+        t2 = '\t'*(4 - (4+len(job_time)+len('s.')) //4)
+        t3 = '\t'*(4 - (4+len(file_size)+len('kB.')) //4)
+        result = ''.join((full_name[1],  t1, '|  ',
+                          full_name[0],  t0, '|  ',
+                          job_time, ' s.', t2, '|  ',
+                          file_size, ' kB.', t3, '|  ',
+                          ctime(now_time), '\t','|  ',
+                          speed, ' kB/s', '\n'
+                          ))
+        print(say('All done in', config['language'], 'np'),
+              job_time,
+              say('s.', config['language'], 'np'),
+              '\n')
+    try:
+        log = open(log_file, 'a')
+        log.write(result)
+    except Exception:
+        answer = False
+    else:        
+        answer = True
+    finally:
+        log.close()
+        return answer
+
 def adv_round (value, base=config['round']):
     if (base is False) or (base is None): return value
     # Позволяет использовать нецелые основания для округления.
@@ -65,13 +112,14 @@ def adv_round (value, base=config['round']):
     # При основании 3.25, число 0.34871 округлится до 0.34875
     # При основании 3.30, число 0.34871 округлится до 0.34867
     # При основании 3.10, число 0.34871 округлится как при основании 4
+    base = float(base)
     quot, tail = int(base // 1), base % 1
     inc = 1
     if tail > 0.5:
         tail = 1 - tail
-    if tail > 0.1: inc = round (1 / tail)
+    if tail > 0.1: inc = round(1 / tail)
     elif tail != 0: quot += 1
-    value = round (round (value * inc, quot) / inc, quot+2)
+    value = round( round(value * inc, quot) / inc, quot+2)
     return value
 
 def ndxf (dxf_name, round_base=config['round'], draw=False):
@@ -117,9 +165,9 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
         dxf_name += '.dxf'
     
     try:
-        dxf = open (dxf_name, 'r')
+        dxf = open(dxf_name, 'r')
         fsize = path.getsize(dxf_name)/1024
-        print(dxf_name+",", round(fsize,2), "kB")
+        print(dxf_name+",", round(fsize, 2), "kB")
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
@@ -208,54 +256,24 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    job_tm = now() - start_tm
-    speed  = fsize / job_tm
-    
-    fsize  = str(round(fsize,  1))
-    job_tm = str(round(job_tm, 3))
-    speed  = str(round(speed,  1))
-
     # Name of origin file was changed, and it recreating
     ## Так как имя исходного файла сменилось, он создаётся заново
     try:
-        dxf = open (dxf_name, 'w')    
+        dxf = open(dxf_name, 'w')    
         dxf.write(new)
-        dxf.close()
         # Trying to save to file with exceptions trapping
         ## Попытка записи в файл с перехватом ошибок
     except Exception:
-        log = open ('bak/processed.log', 'a')
-        log.write('\t'.join(('Error',
-                             full_name[1], '|',
-                             full_name[0], '|',
-                             ctime(now()), '\n'
-                             )))
-        log.close()
+        get_log(full_name, start_tm, fsize, 'Error')
         say('Mistake was made during processing', config['language'])
-        # If was found an exception, it's logging to log
+        # If was found an exception, information about is logged
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
-        t1 = '\t'*(4 - (0+len(full_name[1])) //4)
-        t0 = '\t'*(5 - (3+len(full_name[0])) //4)
-        t2 = '\t'*(4 - (3+len(job_tm+' s.')) //4)
-        t3 = '\t'*(4 - (3+len(fsize+' kB.')) //4)
-        log = open ('bak/processed.log', 'a')
-        log.write(''.join((full_name[1],  t1, '|  ',
-                           full_name[0],  t0, '|  ',
-                           job_tm, ' s.', t2, '|  ',
-                           fsize, ' kB.', t3, '|  ',
-                           ctime(now()), '\t','|  ',
-                           speed, 'kB/s', '\n'
-                           ))
-                  )
-        log.close()        
-        # If wasn't found any exceptions, processe's information logging
+        get_log(full_name, start_tm, fsize)
+        # If wasn't found any exceptions, process information is logged
         # Если не возникло ошибок, в лог выводится информация об обработке
-        
-        print(say('All done in', config['language'], 'np'),
-              job_tm,
-              say('s.', config['language'], 'np'),
-              '\n')
+    finally:
+        dxf.close()
 
 def loop (lastname=None):
     # This loop is repeatedly asking file name and operate with this file
