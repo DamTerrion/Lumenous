@@ -122,6 +122,12 @@ def adv_round (value, base=config['round']):
     value = round( round(value * inc, quot) / inc, quot+2)
     return value
 
+def estimated (file_size):
+    estime = (
+        (file_size ** 2) * 0.000003
+        )
+    return round(estime, 1)
+
 def ndxf (dxf_name, round_base=config['round'], draw=False):
     new = Param = Value = ''
     start_tm = now()
@@ -167,7 +173,7 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
     try:
         dxf = open(dxf_name, 'r')
         fsize = path.getsize(dxf_name)/1024
-        print(dxf_name+",", round(fsize, 2), "kB")
+        print(dxf_name+",", round(fsize, 2), "kB, ~", estimated(fsize), "s.")
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
