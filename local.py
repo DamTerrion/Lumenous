@@ -31,6 +31,7 @@ Actualy phrases = [
     'Mistake was made during processing',
     's.',
     'Try again',
+    'Unknown problem with configuration file.',
     'Wrong Int entered'
     ]
 '''
@@ -74,13 +75,13 @@ dictionary['ru'] = {
     
     'Few files was deleted.':
         'Несколько файлов были удалены.',
-
+    
     'File1':
         'файл.',
-
+    
     'File2':
         'файла.',
-
+    
     'File5':
         'файлов.',
     
@@ -122,6 +123,9 @@ dictionary['ru'] = {
     
     'Try again':
         'Попробуйте ещё раз',
+    
+    'Unknown problem with configuration file':
+        'Неизвестная проблема с конфигурационным файлом',
     
     'Wrong Int entered':
         'Введено неправильное число',

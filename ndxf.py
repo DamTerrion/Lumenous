@@ -31,7 +31,8 @@ def import_config (conf_name=default_config):
             export_config(default_config, reserve_config)
         return reserve_config
     except Exception:
-        print ('Problem with configuration file')
+        say ('Unknown problem with configuration file',
+             reserve_config['language'])
     finally:
         conf_file.close()
         return imported
