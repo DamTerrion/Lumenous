@@ -17,6 +17,7 @@ Actualy phrases = [
     'Deleted',
     'Done!',
     'Few files was deleted.',
+    'File',
     'File not found',
     'Input 0 or 1:',
     'Input a file name',
@@ -73,6 +74,15 @@ dictionary['ru'] = {
     
     'Few files was deleted.':
         'Несколько файлов были удалены.',
+
+    'File1':
+        'файл.',
+
+    'File2':
+        'файла.',
+
+    'File5':
+        'файлов.',
     
     'File not found':
         'Файл не найден',
