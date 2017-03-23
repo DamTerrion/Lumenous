@@ -11,14 +11,18 @@ def getline(name=False):
     for line in file:
         point = line.replace(',','.')
         # Все запятые (экспорт из Excel) заменяются на точки
-        coords = point.split('\t')
+        if '\t' in point: coords = point.split('\t')
+        elif ' ' in point: coords = point.split(' ')
+        else: coords = (point[:-1], '0.0')
         # Строка с координатами точки разбивается по табуляции на [X, Y]
-        for num in range(len(coords)):
-            coords[num] = coords[num].strip()
+        for entry in coords:
+            entry = entry.strip()
             # Каждая координата проходит чистку пробельных символов
         stack.append(coords)
         # Стэк - список точек, представленных списками координат
     file.close()
+    
+    form = input('Введите что-нибудь, чтобы получить кружочки: ')
     
     dxf_name = ''.join(( name[:name.rfind('.')], '.dxf' ))
     dxf = open (dxf_name, 'w')
@@ -28,32 +32,52 @@ def getline(name=False):
         text = ['  0',
                 'SECTION',
                 '  2',
-                'ENTITIES',
-                '  0',
-                'POLYLINE',
-                '  8',
-                '0'
+                'ENTITIES'
                 ]
         # Старт текста нового файла - описание раздела и объекта полилинии
+        if form:
+            # Для каждой точки из стэка генерируется код кружка
+            for point in stack:
+                circle = ['  0',
+                          'CIRCLE',
+                          '  8',
+                          '0',
+                          ' 10',
+                          point[0],
+                          ' 20',
+                          point[1],
+                          ' 30',
+                          '0.0',
+                          ' 40',
+                          '0.1'
+                          ]
+                text.extend(circle)
+        else:
+            text.extend(
+                ['  0',
+                 'POLYLINE',
+                 '  8',
+                 '0'
+                 ])
+            # Для каждой точки из стэка генерируется код вершины
+            for point in stack:
+                vertex = ['  0',
+                          'VERTEX',
+                          '  8',
+                          '0',
+                          ' 10',
+                          point[0],
+                          ' 20',
+                          point[1]
+                          ]
+                text.extend(vertex)
+            text.extend(['  0',
+                         'SEQEND',
+                         '  8',
+                         '0'
+                         ])                     
         
-        for point in stack:
-            vertex = ['  0',
-                      'VERTEX',
-                      '  8',
-                      '0',
-                      ' 10',
-                      point[0],
-                      ' 20',
-                      point[1]
-                      ]
-            text.extend(vertex)
-        # Для каждой точки из стэка генерируется код описания объекта вершины
-            
         text.extend(['  0',
-                     'SEQEND',
-                     '  8',
-                     '0',
-                     '  0',
                      'ENDSEC',
                      '  0',
                      'EOF'
