@@ -9,15 +9,19 @@ def getline(name=False):
     stack = []
     # Инициализируется пустой список для точек
     for line in file:
+        coords = []
         point = line.replace(',','.')
         # Все запятые (экспорт из Excel) заменяются на точки
-        if '\t' in point: coords = point.split('\t')
-        elif ' ' in point: coords = point.split(' ')
-        else: coords = (point[:-1], '0.0')
+        if '\t' in point: raw = point.split('\t')
         # Строка с координатами точки разбивается по табуляции на [X, Y]
-        for entry in coords:
-            entry = entry.strip()
+        elif ' ' in point: raw = point.split(' ')
+        # Если нет табуляции, то разбивается по пробелу
+        else: raw = (point, '0.0')
+        # Если нет второй координаты, она заменяется нулём
+        for entry in raw:
+            coords.append(entry.strip())
             # Каждая координата проходит чистку пробельных символов
+            # и записывается в новый список с "хорошими" координатами
         stack.append(coords)
         # Стэк - список точек, представленных списками координат
     file.close()
@@ -80,7 +84,8 @@ def getline(name=False):
         text.extend(['  0',
                      'ENDSEC',
                      '  0',
-                     'EOF'
+                     'EOF',
+                     ''
                      ])
         # Текст завершается окончанием линии, раздела и файла
         
