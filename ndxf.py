@@ -1,4 +1,4 @@
-from os import replace, path, mkdir
+from os import replace, path, mkdir, listdir
 from time import ctime, time as now
 from local import say, ask
 import clearing
@@ -293,7 +293,11 @@ def loop (lastname=None):
             lastname = code
         quit_conditions = ('quit', 'exit', 'выход', 'конец', 'хватит')
         if code.lower() in quit_conditions: break
-        ndxf(code, draw=True)
+        if code == '-all':
+            for file in listdir():
+                if file.endswith('.dxf'): ndxf(file, draw=True)
+        else:
+            ndxf(code, draw=True)
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
