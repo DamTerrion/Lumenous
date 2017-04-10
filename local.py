@@ -1,6 +1,8 @@
+import json
+
 dictionary = dict.fromkeys(['en', 'ru'], {})
 dictionary['en'] = {
-    '_ErrorSent_': 'Mistake was maked during localization'
+    '_ErrorSent_': 'Localization error happened'
     }
 
 '''
