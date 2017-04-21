@@ -19,7 +19,9 @@ def getline(name=False):
         else: raw = (point, '0.0')
         # Если нет второй координаты, она заменяется нулём
         for entry in raw:
-            coords.append(entry.strip())
+            while entry[0] != '.' and not entry[0].isdigit(): entry = entry[1:]
+            while not entry[-1].isdigit(): entry = entry[:-1]
+            coords.append(entry)
             # Каждая координата проходит чистку пробельных символов
             # и записывается в новый список с "хорошими" координатами
         stack.append(coords)
