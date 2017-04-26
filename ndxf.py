@@ -129,7 +129,7 @@ def estimated (file_size):
         )
     return round(estime, 1)
 
-def ndxf (dxf_name, round_base=config['round'], draw=False):
+def ndxf (dxf_name, round_base=config['round'], draw=True):
     new = Param = Value = ''
     start_tm = now()
     
@@ -283,21 +283,31 @@ def ndxf (dxf_name, round_base=config['round'], draw=False):
         dxf.close()
 
 def loop (lastname=None):
+    firsttime = True    
+    quit_conditions = ('quit', 'exit',
+                       'выход', 'конец', 'хватит'
+                       )
     # This loop is repeatedly asking file name and operate with this file
     ## Здесь циклически спрашивается имя файла и этот файл обрабатывается
     while True:
-        code = ask('Input name of DXF-file for processing:', config['language'])
+        if not firsttime:
+            code = ask('Input name of DXF-file for processing:',
+                       config['language'])
+        else:
+            code = lastname
+            firsttime = False
         if not code and lastname:
             code = lastname
         else:
             lastname = code
-        quit_conditions = ('quit', 'exit', 'выход', 'конец', 'хватит')
-        if code.lower() in quit_conditions: break
-        if code == '-all':
-            for file in listdir():
-                if file.endswith('.dxf'): ndxf(file, draw=True)
+        if code[0] == '-':
+            command = code[1:]
+            if command == 'all':
+                for file in listdir():
+                    if file.endswith('.dxf'): ndxf(file)
+            elif command in quit_conditions: break
         else:
-            ndxf(code, draw=True)
+            ndxf(code)
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
@@ -318,4 +328,5 @@ if __name__ == '__main__':
     ##  если этот скрипт запущен как основной,
     ##  а не импортирован из другого скрипта.
     
-    loop()
+    loop('-all')
+    # С самого начала программа отрабатывает все файлы в папке
