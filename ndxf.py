@@ -283,6 +283,7 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
         dxf.close()
 
 def loop (lastname=None):
+    global config
     firsttime = True    
     quit_conditions = ('quit', 'exit',
                        'выход', 'конец', 'хватит'
@@ -290,9 +291,10 @@ def loop (lastname=None):
     # This loop is repeatedly asking file name and operate with this file
     ## Здесь циклически спрашивается имя файла и этот файл обрабатывается
     while True:
-        if not firsttime:
+        if not firsttime or not lastname:
             code = ask('Input name of DXF-file for processing:',
                        config['language'])
+            if firsttime: firsttime = False
         else:
             code = lastname
             firsttime = False
@@ -305,6 +307,9 @@ def loop (lastname=None):
             if command == 'all':
                 for file in listdir():
                     if file.endswith('.dxf'): ndxf(file)
+            if command == 'reload':
+                config = import_config()
+                print (config)
             elif command in quit_conditions: break
         else:
             ndxf(code)
