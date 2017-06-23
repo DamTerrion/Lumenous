@@ -93,8 +93,8 @@ def get_log (full_name, start_time, file_size, error=None):
                           ))
         print(say('All done in', config['language'], 'np'),
               job_time,
-              say('s.', config['language'], 'np'),
-              '\n')
+              say('s.', config['language'], 'np')
+              )
     try:
         log = open(log_file, 'a')
         log.write(result)
@@ -120,7 +120,10 @@ def adv_round (value, base=config['round']):
         tail = 1 - tail
     if tail > 0.1: inc = round(1 / tail)
     elif tail != 0: quot += 1
+    #old_val = value
     value = round( round(value * inc, quot) / inc, quot+2)
+    #if value != old_val:
+    #    print (old_val, ', ', value, ', ', base)
     return value
 
 def estimated (file_size):
@@ -283,7 +286,6 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
         dxf.close()
 
 def loop (lastname=None):
-    global config
     firsttime = True    
     quit_conditions = ('quit', 'exit',
                        'выход', 'конец', 'хватит'
@@ -292,6 +294,7 @@ def loop (lastname=None):
     ## Здесь циклически спрашивается имя файла и этот файл обрабатывается
     while True:
         if not firsttime or not lastname:
+            print () #Empty line before following question
             code = ask('Input name of DXF-file for processing:',
                        config['language'])
             if firsttime: firsttime = False
@@ -307,9 +310,9 @@ def loop (lastname=None):
             if command == 'all':
                 for file in listdir():
                     if file.endswith('.dxf'): ndxf(file)
-            if command == 'reload':
-                config = import_config()
-                print (config)
+            #if command == 'reload':
+            #    import_config()
+            #    print (config)
             elif command in quit_conditions: break
         else:
             ndxf(code)
