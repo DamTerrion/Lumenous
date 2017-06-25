@@ -91,7 +91,7 @@ def get_log (full_name, start_time, file_size, error=None):
                           ctime(now_time), '\t','|  ',
                           speed, ' kB/s', '\n'
                           ))
-        print(say('All done in', config['language'], 'np'),
+        print('\t', say('All done in', config['language'], 'np'),
               job_time,
               say('s.', config['language'], 'np')
               )
