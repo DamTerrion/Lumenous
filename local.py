@@ -1,6 +1,8 @@
+import json
+
 dictionary = dict.fromkeys(['en', 'ru'], {})
 dictionary['en'] = {
-    '_ErrorSent_': 'Mistake was maked during localization'
+    '_ErrorSent_': 'Localization error happened'
     }
 
 '''
@@ -17,6 +19,7 @@ Actualy phrases = [
     'Deleted',
     'Done!',
     'Few files was deleted.',
+    'File',
     'File not found',
     'Input 0 or 1:',
     'Input a file name',
@@ -30,6 +33,7 @@ Actualy phrases = [
     'Mistake was made during processing',
     's.',
     'Try again',
+    'Unknown problem with configuration file.',
     'Wrong Int entered'
     ]
 '''
@@ -64,12 +68,24 @@ dictionary['ru'] = {
     
     'Deleted':
         'Удалено',
+
+    'Deleted1':
+        'Удалён',
     
     'Done!':
 	'Готово!',
     
     'Few files was deleted.':
         'Несколько файлов были удалены.',
+    
+    'File1':
+        'файл.',
+    
+    'File2':
+        'файла.',
+    
+    'File5':
+        'файлов.',
     
     'File not found':
         'Файл не найден',
@@ -109,6 +125,9 @@ dictionary['ru'] = {
     
     'Try again':
         'Попробуйте ещё раз',
+    
+    'Unknown problem with configuration file':
+        'Неизвестная проблема с конфигурационным файлом',
     
     'Wrong Int entered':
         'Введено неправильное число',

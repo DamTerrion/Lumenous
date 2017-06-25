@@ -1,16 +1,46 @@
-from os import replace, path, mkdir
+from os import replace, path, mkdir, listdir
 from time import ctime, time as now
 from local import say, ask
 import clearing
 
-config = {'language': 'EN',
-          'round': False,
-          'backs': 'bak',
-          'clean': 'not',
-          'period': 30,
-          'report': 'yes'}
+default_config = 'ndxf.conf'
+reserve_config = {'language': 'EN',
+                  'round': 3.25,
+                  'backs': 'bak',
+                  'clean': 'not',
+                  'period': 30,
+                  'report': 'yes'}
 
-def export_config (file_name='ndxf.conf', export=config):
+def import_config (conf_name=default_config):
+    imported = dict()
+    try:
+        conf_file = open(conf_name)
+        for line in conf_file:
+            if line.find('=') > 0:
+                set_name = line.partition('=')[0].strip()
+                set_value = line.partition('=')[2].strip()
+                if (set_name.isalnum() and
+                    set_value.isalnum):
+                    if set_value.isdigit(): set_value = int(set_value)
+                    elif set_value == 'True': set_value = True
+                    elif set_value == 'False': set_value = False
+                    elif set_value == 'None': set_value = None
+                    imported[set_name.lower()] = set_value
+    except FileNotFoundError:
+        if conf_name == default_config:
+            export_config(default_config, reserve_config)
+        return reserve_config
+    except Exception:
+        say ('Unknown problem with configuration file',
+             reserve_config['language'])
+    finally:
+        conf_file.close()
+        return imported
+
+config = import_config()
+# Обязательный импорт параметров из внешнего файла
+
+def export_config (file_name=default_config, export=config):
     export_file = open(file_name, 'w')
     export_text = ['-= nDXF configuration settings =-', '\n']
     
@@ -24,28 +54,85 @@ def export_config (file_name='ndxf.conf', export=config):
         if entry in export:
             export_text.extend((entry, ' = ', export[entry], '\n'))
     
-    configuration_file.write(
-        ''.join(configuration_text)
+    conf_file.write(
+        ''.join(export_text)
         )
+    return True
 
-try:
-    configuration_file = open('ndxf.conf')
-    for line in configuration_file:
-        if line.find('=') > 0:
-            sett_name = line.partition('=')[0].strip()
-            sett_value = line.partition('=')[2].strip()
-            if (sett_name.isalnum() and
-                sett_value.isalnum):
-                if sett_value.isdigit(): sett_value = int(sett_value)
-                elif sett_value == 'True': sett_value = True
-                elif sett_value == 'False': sett_value = False
-                config[sett_name.lower()] = sett_value
-except Exception:
-    print ('Problem with configuration file')    
-finally:
-    configuration_file.close()
+def get_log (full_name, start_time, file_size, error=None):
+    log_file = ''.join((config['backs'],
+                        '/',
+                        'processed.log'
+                        ))    
+    now_time = now()    
+    t1 = '\t'*(4 - (0+len(full_name[1])) //4)
+    t0 = '\t'*(5 - (3+len(full_name[0])) //4)
+    
+    if error:
+        result = ''.join((str(error), ':', '\t',
+                          full_name[1], t1, '|  ',
+                          full_name[0], t0, '|  ',
+                          ctime(now_time), '\n'
+                          ))
+    else:
+        job_time = now_time - start_time
+        speed  = file_size / job_time
 
-def ndxf (dxf_name, rounds=config['round'], draw=False):
+        file_size  = str(round(file_size,  1))
+        job_time = str(round(job_time, 3))
+        speed  = str(round(speed,  1))
+        
+        t2 = '\t'*(4 - (4+len(job_time)+len('s.')) //4)
+        t3 = '\t'*(4 - (4+len(file_size)+len('kB.')) //4)
+        result = ''.join((full_name[1],  t1, '|  ',
+                          full_name[0],  t0, '|  ',
+                          job_time, ' s.', t2, '|  ',
+                          file_size, ' kB.', t3, '|  ',
+                          ctime(now_time), '\t','|  ',
+                          speed, ' kB/s', '\n'
+                          ))
+        print(say('All done in', config['language'], 'np'),
+              job_time,
+              say('s.', config['language'], 'np')
+              )
+    try:
+        log = open(log_file, 'a')
+        log.write(result)
+    except Exception:
+        answer = False
+    else:        
+        answer = True
+    finally:
+        log.close()
+        return answer
+
+def adv_round (value, base=config['round']):
+    if (base is False) or (base is None): return value
+    # Позволяет использовать нецелые основания для округления.
+    # При основании 3.50, число 0.34871 округлится до 0.3485
+    # При основании 3.25, число 0.34871 округлится до 0.34875
+    # При основании 3.30, число 0.34871 округлится до 0.34867
+    # При основании 3.10, число 0.34871 округлится как при основании 4
+    base = float(base)
+    quot, tail = int(base // 1), base % 1
+    inc = 1
+    if tail > 0.5:
+        tail = 1 - tail
+    if tail > 0.1: inc = round(1 / tail)
+    elif tail != 0: quot += 1
+    #old_val = value
+    value = round( round(value * inc, quot) / inc, quot+2)
+    #if value != old_val:
+    #    print (old_val, ', ', value, ', ', base)
+    return value
+
+def estimated (file_size):
+    estime = (
+        (file_size ** 2) * 0.000003
+        )
+    return round(estime, 1)
+
+def ndxf (dxf_name, round_base=config['round'], draw=True):
     new = Param = Value = ''
     start_tm = now()
     
@@ -88,18 +175,17 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
         dxf_name += '.dxf'
     
     try:
-        dxf = open (dxf_name, 'r')
-        print(dxf_name)
+        dxf = open(dxf_name, 'r')
         fsize = path.getsize(dxf_name)/1024
+        print(dxf_name+",", round(fsize, 2), "kB, ~", estimated(fsize), "s.")
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
         if draw:
-            print(dxf_name)
-            say('File not found', config['language'])
+            print(dxf_name, "-",
+                  say('File not found', config['language'], 'np')
+                  )
         return None
-    
-    if rounds: print('round base =', rounds)
     
     '''
     block_list = {'no_name': list()}
@@ -157,9 +243,9 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
                     # If it's right couple 'object-parameter', it saving
                     ## Если рассматривается правильная пара
                     ##  объект-параметр, она записывается
-                    if rounds and int(Param[1:-1]) in range(10, 60):
+                    if round_base and int(Param[1:-1]) in range(10, 60):
                         Value = ''.join((
-                            str(round(float(Value[:-1]), rounds)),
+                            str(adv_round(float(Value[:-1]), round_base)                                ),
                             Value[-1]))
                     new = ''.join((new, Param, Value))
         
@@ -180,70 +266,61 @@ def ndxf (dxf_name, rounds=config['round'], draw=False):
     # Если произошла ошибка (невозможно файл переместить в папку bak/),
     #  то он переименовывается в <name>.dxf.bak там, где и был, с заменой
 
-    job_tm = now() - start_tm
-    speed  = fsize / job_tm
-    
-    fsize  = str(round(fsize,  1))
-    job_tm = str(round(job_tm, 3))
-    speed  = str(round(speed,  1))
-
     # Name of origin file was changed, and it recreating
     ## Так как имя исходного файла сменилось, он создаётся заново
     try:
-        dxf = open (dxf_name, 'w')    
+        dxf = open(dxf_name, 'w')    
         dxf.write(new)
-        dxf.close()
         # Trying to save to file with exceptions trapping
         ## Попытка записи в файл с перехватом ошибок
     except Exception:
-        log = open ('bak/processed.log', 'a')
-        log.write('\t'.join(('Error',
-                             full_name[1], '|',
-                             full_name[0], '|',
-                             ctime(now()), '\n'
-                             )))
-        log.close()
+        get_log(full_name, start_tm, fsize, 'Error')
         say('Mistake was made during processing', config['language'])
-        # If was found an exception, it's logging to log
+        # If was found an exception, information about is logged
         ## Если возникла ошибка, то сообщение об этом выводится в лог
     else:
-        t1 = '\t'*(4 - (0+len(full_name[1])) //4)
-        t0 = '\t'*(5 - (3+len(full_name[0])) //4)
-        t2 = '\t'*(4 - (3+len(job_tm+' s.')) //4)
-        t3 = '\t'*(4 - (3+len(fsize+' kB.')) //4)
-        log = open ('bak/processed.log', 'a')
-        log.write(''.join((full_name[1],  t1, '|  ',
-                           full_name[0],  t0, '|  ',
-                           job_tm, ' s.', t2, '|  ',
-                           fsize, ' kB.', t3, '|  ',
-                           ctime(now()), '\t','|  ',
-                           speed, 'kB/s', '\n'
-                           ))
-                  )
-        log.close()        
-        # If wasn't found any exceptions, processe's information logging
+        get_log(full_name, start_tm, fsize)
+        # If wasn't found any exceptions, process information is logged
         # Если не возникло ошибок, в лог выводится информация об обработке
-        
-        print(say('All done in', config['language'], 'np'),
-              job_tm, say('s.', config['language'], 'np'))
+    finally:
+        dxf.close()
 
 def loop (lastname=None):
+    firsttime = True    
+    quit_conditions = ('quit', 'exit',
+                       'выход', 'конец', 'хватит'
+                       )
     # This loop is repeatedly asking file name and operate with this file
     ## Здесь циклически спрашивается имя файла и этот файл обрабатывается
     while True:
-        code = ask('Input name of DXF-file for processing:', config['language'])
+        if not firsttime or not lastname:
+            print () #Empty line before following question
+            code = ask('Input name of DXF-file for processing:',
+                       config['language'])
+            if firsttime: firsttime = False
+        else:
+            code = lastname
+            firsttime = False
         if not code and lastname:
             code = lastname
         else:
             lastname = code
-        quit_conditions = ('quit', 'exit', 'выход', 'конец', 'хватит')
-        if code.lower() in quit_conditions: break
-        ndxf(code, draw=True)
+        if code[0] == '-':
+            command = code[1:]
+            if command == 'all':
+                for file in listdir():
+                    if file.endswith('.dxf'): ndxf(file)
+            #if command == 'reload':
+            #    import_config()
+            #    print (config)
+            elif command in quit_conditions: break
+        else:
+            ndxf(code)
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
-
 if __name__ == '__main__':
+    
     if config['clean'].lower() == 'manual':
         clean_need = ask('Activate clearing? (Yes/Not/Days)',
                          config['language'])
@@ -259,4 +336,5 @@ if __name__ == '__main__':
     ##  если этот скрипт запущен как основной,
     ##  а не импортирован из другого скрипта.
     
-    loop()
+    loop('-all')
+    # С самого начала программа отрабатывает все файлы в папке
