@@ -1,3 +1,40 @@
+def parse (line):
+    line = line.replace(',', '.')
+    coords, last = list(), str()
+    for char in line:
+        if not char.isalnum() and not char == '.':
+            if last:
+                try:
+                    new = float(last)
+                except ValueError:
+                    new = str(last)
+                finally:
+                    coords.append(new)
+                    last = ''
+        else:
+            last += char
+    return coords
+
+def build_line (data):
+    stack, polyline = list(), {'layer': str(),
+                               'vertex': list()}
+    # Инициализируется пустой список для точек
+    layer = '0'
+    # Инициализируется имя слоя
+    for line in file:
+        entry = parse(line)
+        if not entry and polyline['vertex']:
+            stack.append(polyline)
+            polyline = list()
+        elif len(entry) = 1:
+            if isinstance(entry[0], float):
+                coords = (entry[0], 0.0)
+                polyline['vertex'].append
+            elif isinstance(entry[0], str):
+                layer = '
+        stack.append(coords)
+        # Стэк - список точек, представленных списками координат
+
 def getline(name=False):
     if not name:
         name = input ('Имя файла точек: ')
