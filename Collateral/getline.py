@@ -16,123 +16,125 @@ def parse (line):
     return coords
 
 def build_line (data):
-    stack, polyline = list(), {'layer': str(),
-                               'vertex': list()}
-    # Инициализируется пустой список для точек
+    def new_poly ():
+        there = layer
+        return {'layer': there,
+                'vertex': list()}
+    
     layer = '0'
-    # Инициализируется имя слоя
+    stack, polyline = list(), new_poly()
+    for line in data:
+        entry = parse(line)
+        if len(entry) == 0:
+            if polyline['vertex']:
+                stack.append(polyline)
+                polyline = new_poly()
+        elif len(entry) == 1:
+            if isinstance(entry[0], float):
+                polyline['vertex'].append(
+                    (entry[0], 0.0)
+                    )
+            elif isinstance(entry[0], str):
+                layer = entry[0]
+                polyline = new_poly()
+        else:
+            polyline['vertex'].append(
+                (entry[0], entry[1])
+                )
+    if polyline['vertex']:
+        stack.append(polyline)
+    return stack
+
+def build_circ (data):
+    def new_circ ():
+        there = layer
+        return {'layer': there,
+                'center': [0.0, 0.0, 0.1]}
+    
+    layer = '0'
+    stack = list()
     for line in file:
         entry = parse(line)
-        if not entry and polyline['vertex']:
-            stack.append(polyline)
-            polyline = list()
-        elif len(entry) = 1:
+        circle = new_circ
+        if len(entry) == 0:
+            continue
+        elif len(entry) == 1:
             if isinstance(entry[0], float):
-                coords = (entry[0], 0.0)
-                polyline['vertex'].append
+                circle['center'][0] = entry[0]
             elif isinstance(entry[0], str):
-                layer = '
-        stack.append(coords)
-        # Стэк - список точек, представленных списками координат
+                layer = entry[0]
+                continue
+        elif len(entry) == 2:
+            circle['center'][:2] = [entry[0],
+                                    entry[1]]
+        else:
+            circle['center'] = [entry[0],
+                                entry[1],
+                                entry[2]]
+        stack.append(circle)
+    return stack
 
-def getline(name=False):
+def dxf_code (stack, mode='line'):
+    text = ['  0', 'SECTION',
+            '  2', 'ENTITIES']
+    
+    if mode == 'line':
+        for line in stack:
+            text.extend(
+                ('  0', 'POLYLINE',
+                 '  8', line['layer'])
+                )
+            for vertex in line['vertex']:
+                text.extend(
+                    ('  0', 'VERTEX',
+                     '  8', line['layer'],
+                     ' 10', str(vertex[0]),
+                     ' 20', str(vertex[1]))
+                    )
+            text.extend(
+                ('  0', 'SEQEND',
+                 '  8', line['layer'])
+                )
+            
+    elif mode == 'circle':
+        for circle in stack:
+            text.extend(
+                ('  0', 'CIRCLE',
+                 '  8', circle['layer'],
+                 ' 10', str(circle['center'][0]),
+                 ' 20', str(circle['center'][1]),
+                 ' 40', str(circle['center'][2]))
+                )
+            
+    text.extend(
+        ('  0', 'ENDSEC',
+         '  0', 'EOF')
+        )
+    return text
+
+def getline (name=None):
     if not name:
         name = input ('Имя файла точек: ')
-        if name[-4:] != '.txt':
-            name = '.'.join((name, 'txt'))
+    if not name.endswith('.txt'):
+        name = '.'.join((name, 'txt'))
+    
+    print ('Пропустите строку, 0 или False, чтобы получить линию, или')
+    mode = input (
+        'введите 1, True или что угодно, чтобы получить кружочки: ')
+    
     file = open (name, 'r')
-    # Производится запрос имени файла и его открытие
-    
-    stack = []
-    # Инициализируется пустой список для точек
-    for line in file:
-        coords = []
-        point = line.replace(',','.')
-        # Все запятые (экспорт из Excel) заменяются на точки
-        if '\t' in point: raw = point.split('\t')
-        # Строка с координатами точки разбивается по табуляции на [X, Y]
-        elif ' ' in point: raw = point.split(' ')
-        # Если нет табуляции, то разбивается по пробелу
-        else: raw = (point, '0.0')
-        # Если нет второй координаты, она заменяется нулём
-        for entry in raw:
-            while entry[0] != '.' and not entry[0].isdigit(): entry = entry[1:]
-            while not entry[-1].isdigit(): entry = entry[:-1]
-            coords.append(entry)
-            # Каждая координата проходит чистку пробельных символов
-            # и записывается в новый список с "хорошими" координатами
-        stack.append(coords)
-        # Стэк - список точек, представленных списками координат
+    if mode:
+        data = build_circ(file)
+        text = dxf_code(data, 'circle')
+    else:
+        data = build_line(file)
+        text = dxf_code(data, 'line')
     file.close()
-    
-    form = input('Введите что-нибудь, чтобы получить кружочки: ')
     
     dxf_name = ''.join(( name[:name.rfind('.')], '.dxf' ))
     dxf = open (dxf_name, 'w')
-    # Создаётся новый файл, но после первой точки в названии исходного файла
-    #  ставится расширение .dxf
-    try:
-        text = ['  0',
-                'SECTION',
-                '  2',
-                'ENTITIES'
-                ]
-        # Старт текста нового файла - описание раздела и объекта полилинии
-        if form:
-            # Для каждой точки из стэка генерируется код кружка
-            for point in stack:
-                circle = ['  0',
-                          'CIRCLE',
-                          '  8',
-                          '0',
-                          ' 10',
-                          point[0],
-                          ' 20',
-                          point[1],
-                          ' 30',
-                          '0.0',
-                          ' 40',
-                          '0.1'
-                          ]
-                text.extend(circle)
-        else:
-            text.extend(
-                ['  0',
-                 'POLYLINE',
-                 '  8',
-                 '0'
-                 ])
-            # Для каждой точки из стэка генерируется код вершины
-            for point in stack:
-                vertex = ['  0',
-                          'VERTEX',
-                          '  8',
-                          '0',
-                          ' 10',
-                          point[0],
-                          ' 20',
-                          point[1]
-                          ]
-                text.extend(vertex)
-            text.extend(['  0',
-                         'SEQEND',
-                         '  8',
-                         '0'
-                         ])                     
-        
-        text.extend(['  0',
-                     'ENDSEC',
-                     '  0',
-                     'EOF',
-                     ''
-                     ])
-        # Текст завершается окончанием линии, раздела и файла
-        
-        dxf.write('\n'.join(text))
-        # В файл записывается не сам список, а строка из элементов списка,
-        #  отделённых друг от друга переводом на новую строку '\n'
-    finally:
-        dxf.close()
+    dxf.write('\n'.join(text))
+    dxf.close()
     print ('Готово!')
 
 if __name__ == '__main__':
