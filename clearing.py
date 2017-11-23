@@ -1,7 +1,7 @@
 from os import path, walk, remove
 from time import ctime, time as now
 from confirm import confirm
-from local import say, ask
+from local import say, ask, think
 
 lang = 'RU'
 
@@ -65,20 +65,17 @@ def call (command=False):
 
 def need_clear (days=45):
     count = bak(days)
-    # say('Few files was deleted.', lang)
-    ######
     if (count%10 == 1 and
         count%100 != 11):
-        deleted = say('Deleted1', lang, 'noprint')
-        few_files = say('File1', lang, 'noprint')
+        deleted = think('Deleted1', lang)
+        few_files = think('File1', lang)
     elif (count%10 in (2, 3, 4) and
         not count%100 in (12, 13, 14)):
-        deleted = say('Deleted', lang, 'noprint')
-        few_files = say('File2', lang, 'noprint')
+        deleted = think('Deleted', lang)
+        few_files = think('File2', lang)
     else:
-        deleted = say('Deleted', lang, 'noprint')
-        few_files = say('File5', lang, 'noprint')
-    ######
+        deleted = think('Deleted', lang)
+        few_files = think('File5', lang)
     print (deleted, count, few_files)
 
 if __name__ == '__main__':

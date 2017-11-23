@@ -27,6 +27,7 @@ Actualy phrases = [
     'Input name of DXF-file for processing:',
     'Input name of object for selection:',
     'Input name of result file:',
+    'Insertion!',
     'kB.',
     'Limitation less than 10 days, are you confirm?',
     'Mistake was made',
@@ -108,6 +109,9 @@ dictionary['ru'] = {
     'Input name of result file:':
         'Введите имя файла для результата:',
     
+    'Insertion!':
+        'Обнаружен объект-вставка!',
+    
     'kB.':
         'кБ.',
     
@@ -136,28 +140,40 @@ dictionary['ru'] = {
 
 __author__ = 'Maksim "DamTerrion" Solov\'ev'
 
+def check (sentence, language):
+    if not isinstance(sentence, str):
+        return False
+    if not isinstance(language, str):
+        return 'en'
+    return language.lower()
 
-def say (sentence, language='en', action='print'):
-    if (isinstance(language, str) and isinstance(sentence, str)):
-        language = language.lower()
-    else: return False
-    if action == 'input':
-        return ask(sentence, language)
+def think (sentence, language='en'):
+    language = check(sentence, language)
+    if not language:
+        sentence = ' '.join(
+            ('|Error: <', sentence, '> Language was not set|')
+            )
+        return sentence
     if not language in dictionary:
         language = 'en'
     if sentence in dictionary[language]:
         sentence = dictionary[language][sentence]
-    if action in ['print', 'p']:
-        return print(sentence)
-    if action in ['noprint', 'np']:
-        return sentence
+    elif language != 'en':
+        sentence = think(sentence, 'en')
+    else:
+        sentence = ' '.join(
+            ('|Error: <', sentence, '> Sentence was not found in local.py|')
+            )
+    return sentence
+
+def say (sentence, language='en'):
+    print(
+        think(sentence, language)
+        )
+    return True
 
 def ask (sentence, language='en'):
-    if (isinstance(language, str) and isinstance(sentence, str)):
-        language = language.lower()
-    else: return False
-    if not language in dictionary:
-        language = 'en'
-    if sentence in dictionary[language]:
-        sentence = dictionary[language][sentence]
-    return input(sentence+' ')
+    question_description = ''.join(
+        (think(sentence, language), ' ')
+        )
+    return input(question_description)

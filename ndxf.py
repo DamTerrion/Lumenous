@@ -1,6 +1,6 @@
 from os import replace, path, mkdir, listdir
 from time import ctime, time as now
-from local import say, ask
+from local import think, say, ask
 import clearing
 
 default_config = 'ndxf.conf'
@@ -91,9 +91,9 @@ def get_log (full_name, start_time, file_size, error=None):
                           ctime(now_time), '\t','|  ',
                           speed, ' kB/s', '\n'
                           ))
-        print('\t', say('All done in', config['language'], 'np'),
+        print('\t', think('All done in', config['language']),
               job_time,
-              say('s.', config['language'], 'np')
+              think('s.', config['language'])
               )
     try:
         log = open(log_file, 'a')
@@ -183,7 +183,7 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
     except FileNotFoundError:
         if draw:
             print(dxf_name, "-",
-                  say('File not found', config['language'], 'np')
+                  think('File not found', config['language'])
                   )
         return None
     
@@ -310,10 +310,12 @@ def loop (lastname=None):
             if command == 'all':
                 for file in listdir():
                     if file.endswith('.dxf'): ndxf(file)
-            #if command == 'reload':
+            #elif command == 'reload':
             #    import_config()
             #    print (config)
             elif command in quit_conditions: break
+            else:
+                say ('Unknown command', config['language'])
         else:
             ndxf(code)
 
