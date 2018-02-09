@@ -28,10 +28,11 @@ Actualy phrases = [
     'Input name of object for selection:',
     'Input name of result file:',
     'Insertion!',
-    'kB.',
+    'kB',
     'Limitation less than 10 days, are you confirm?',
     'Mistake was made',
     'Mistake was made during processing',
+    'Round base set at',
     's.',
     'Try again',
     'Unknown problem with configuration file.',
@@ -112,8 +113,8 @@ dictionary['ru'] = {
     'Insertion!':
         'Обнаружен объект-вставка!',
     
-    'kB.':
-        'кБ.',
+    'kB':
+        'кБ',
     
     'Limitation less than 10 days, are you confirm?':
         'Срок давности меньше 10 дней, подтверждаете?',
@@ -123,6 +124,9 @@ dictionary['ru'] = {
     
     'Mistake was made during processing':
         'Произошла ошибка во время обработки',
+    
+    'Round base set at':
+        'Порядок округления установлен на',
     
     's.':
         'с.',
@@ -138,7 +142,11 @@ dictionary['ru'] = {
     }
 
 
-__author__ = 'Maksim "DamTerrion" Solov\'ev'
+__author__ = {
+    'name': "Maksim Solov'ev",
+    'nick': 'DamTerrion',
+    'email': 'damterrion@yandex.ru'
+    }
 
 def check (sentence, language):
     if not isinstance(sentence, str):
@@ -151,7 +159,7 @@ def think (sentence, language='en'):
     language = check(sentence, language)
     if not language:
         sentence = ' '.join(
-            ('|Error: <', sentence, '> Language was not set|')
+            ('|Error: <', language, '> was not set as language at local.py|')
             )
         return sentence
     if not language in dictionary:
@@ -162,7 +170,7 @@ def think (sentence, language='en'):
         sentence = think(sentence, 'en')
     else:
         sentence = ' '.join(
-            ('|Error: <', sentence, '> Sentence was not found in local.py|')
+            ('|Error: <', sentence, '> was not found in local.py|')
             )
     return sentence
 

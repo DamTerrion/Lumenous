@@ -86,15 +86,32 @@ def get_log (full_name, start_time, file_size, error=None):
         job_time = str(round(job_time, 3))
         speed  = str(round(speed,  1))
         
-        t2 = '\t'*(4 - (4+len(job_time)+len('s.')) //4)
-        t3 = '\t'*(4 - (4+len(file_size)+len('kB.')) //4)
-        result = ''.join((full_name[1],  t1, '|  ',
-                          full_name[0],  t0, '|  ',
-                          job_time, ' s.', t2, '|  ',
-                          file_size, ' kB.', t3, '|  ',
-                          ctime(now_time), '\t','|  ',
-                          speed, ' kB/s', '\n'
-                          ))
+        t2 = '\t'*(
+            4 - (
+                4+
+                len(job_time)+
+                len(
+                    think('s.', config['language'])
+                    )
+                )
+                   //4)
+        t3 = '\t'*(
+            4 - (
+                4+
+                len(file_size)+
+                len(
+                    think('kB', config['language'])
+                    )
+                )
+                    //4)
+        result = ''.join((
+            full_name[1],  t1, '|  ',
+            full_name[0],  t0, '|  ',
+            job_time, ' ', think('s.', config['language']), t2, '|  ',
+            file_size, ' ', think('kB', config['language']), t3, '|  ',
+            ctime(now_time), '\t','|  ',
+            speed, ' kB/s', '\n'
+            ))
         print('\t', think('All done in', config['language']),
               job_time,
               think('s.', config['language'])
@@ -181,7 +198,14 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
     try:
         dxf = open(dxf_name, 'r')
         fsize = path.getsize(dxf_name)/1024
-        print(dxf_name+",", round(fsize, 2), "kB, ~", estimated(fsize), "s.")
+        print(
+            dxf_name+',',
+            round(fsize, 2),
+            think('kB', config['language']),
+            '~',
+            estimated(fsize),
+            think('s.', config['language'])
+            )
         # File opens for reading, its size saved
         ## Файл открывается для считывания, записывается его размер
     except FileNotFoundError:
@@ -323,7 +347,11 @@ def loop (lastname=None):
         else:
             ndxf(code)
 
-__author__ = 'Maksim "DamTerrion" Solov\'ev'
+__author__ = {
+    'name': "Maksim Solov'ev",
+    'nick': 'DamTerrion',
+    'email': 'damterrion@yandex.ru'
+    }
 
 if __name__ == '__main__':
     
