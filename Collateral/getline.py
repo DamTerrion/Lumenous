@@ -112,15 +112,16 @@ def dxf_code (stack, mode='line'):
         )
     return text
 
-def getline (name=None):
+def getline (name=None, mode=None):
     if not name:
         name = input ('Имя файла точек: ')
     if not name.endswith('.txt'):
         name = '.'.join((name, 'txt'))
     
-    print ('Пропустите строку, 0 или False, чтобы получить линию, или')
-    mode = input (
-        'введите 1, True или что угодно, чтобы получить кружочки: ')
+    if mode is None:
+        print ('Пропустите строку, 0 или False, чтобы получить линию, или')
+        mode = input (
+            'введите 1, True или что угодно, чтобы получить кружочки: ')
     
     file = open (name, 'r')
     if mode:
@@ -136,6 +137,13 @@ def getline (name=None):
     dxf.write('\n'.join(text))
     dxf.close()
     print ('Готово!')
+
+__author__ = {
+    'name': "Maksim Solov'ev",
+    'nick': 'DamTerrion',
+    'email': 'damterrion@yandex.ru',
+    'github': 'https://github.com/damterrion'
+    }
 
 if __name__ == '__main__':
     getline()
