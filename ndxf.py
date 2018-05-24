@@ -313,7 +313,7 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
     finally:
         dxf.close()
 
-def loop (lastname=None):
+def loop (lastname=None, repeat=True):
     firsttime = True    
     quit_conditions = ('quit', 'exit',
                        'выход', 'конец', 'хватит'
@@ -346,11 +346,13 @@ def loop (lastname=None):
                 say ('Unknown command', config['language'])
         else:
             ndxf(code)
+        if not repeat: break
 
 __author__ = {
     'name': "Maksim Solov'ev",
     'nick': 'DamTerrion',
-    'email': 'damterrion@yandex.ru'
+    'email': 'damterrion@yandex.ru',
+    'github': 'https://github.com/damterrion'
     }
 
 if __name__ == '__main__':
@@ -370,5 +372,5 @@ if __name__ == '__main__':
     ##  если этот скрипт запущен как основной,
     ##  а не импортирован из другого скрипта.
     
-    loop('-all')
+    loop('-all', False)
     # С самого начала программа отрабатывает все файлы в папке
