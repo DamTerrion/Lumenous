@@ -134,6 +134,17 @@ def dxf (pat, layer='FROM_PAT'):
     return '\n'.join(text)
 
 def add (X=0, Y=0, H=4, W=4, A=0):
+    '''while A > 1800 or A <= -1800:
+        if A > 1800: A -= 3600
+        if A <= -1800: A += 3600
+    if A < -900:
+        A += 1800
+    elif -900 <= A < 0:
+        A += 900
+        H, W = W, H
+    elif 900 >= A:
+        A -= 900
+        H, W = W, H'''
     elem = {
         'X': X,
         'Y': Y,
@@ -143,54 +154,91 @@ def add (X=0, Y=0, H=4, W=4, A=0):
         }
     return elem
 
-def mult (pat, value=1, center=(0, 0), copy=False):
+def normalize (pat):
     result = []
-    if copy: result.extend(pat)
     for item in pat:
-        new = dict.fromkeys(key_set)
-        new['X'] = int((item['X']-center[0]) * value) + center[0]
-        new['Y'] = int((item['Y']-center[1]) * value) + center[1]
-        new['H'] = int(item['H'] * value)
-        new['W'] = int(item['W'] * value)
-        new['A'] = item['A']
-        result.append(new)
+        A = item['A']
+        H = item['H']
+        W = item['W']
+        while A < 0 or A >= 1800:
+            if A >= 1800: A -= 1800
+            if A < 0 : A += 1800
+        if A >= 900:
+            A -= 900
+            H, W = W, H
+        result.append({
+            'X': round(item['X']),
+            'Y': round(item['Y']),
+            'H': round(H),
+            'W': round(W),
+            'A': round(A)
+            })
     return result
 
-def rotate (pat, ang=0, cent=(51000, 51000), copy=False):
+def mult (elem, value=1, center=(0, 0)):
+    new = add(
+        X = round((elem['X']-center[0]) * value) + center[0],
+        Y = round((elem['Y']-center[1]) * value) + center[1],
+        H = round(elem['H'] * value),
+        W = round(elem['W'] * value),
+        A = elem['A']
+        )
+    return new
+
+def mult_all (pat, value=1, center=(0, 0)):
     result = []
-    if copy: result.extend(pat)
+    for elem in pat:
+        result.append(
+            mult(elem, value, center))
+    return result
+
+def rotate (elem, ang=0, cent=(51000, 51000)):
     while ang > 1800 or ang <= -1800:
         if ang > 1800: ang = ang - 3600
         if ang <= -1800: ang = ang + 3600
-    for item in pat:
-        new = dict.fromkeys(key_set)
-        new['X'] = int(cos(
-            atan2(item['Y']-cent[1], item['X']-cent[0])
-            + (ang * pi / 1800)
-            ) * hypot(item['Y']-cent[1], item['X']-cent[0])) + cent[0]
-        new['Y'] = int(sin(
-            atan2(item['Y']-cent[1], item['X']-cent[0])
-            + (ang * pi / 1800)
-            ) * hypot(item['Y']-cent[1], item['X']-cent[0])) + cent[1]
-        turned = turn(item, ang)
-        for key in ('H', 'W', 'A'):
-            new[key] = turned[key]
-        result.append(new)
+    turned = turn(elem, ang)
+    new = add(
+        X = round(cos(atan2(elem['Y']-cent[1],
+                          elem['X']-cent[0])
+                    + (ang * pi / 1800) )
+                * hypot(elem['Y']-cent[1],
+                        elem['X']-cent[0]) ) + cent[0],
+        Y = round(sin(atan2(elem['Y']-cent[1],
+                          elem['X']-cent[0])
+                    + (ang * pi / 1800) )
+                * hypot(elem['Y']-cent[1],
+                        elem['X']-cent[0]) ) + cent[1],
+        H = turned['H'],
+        W = turned['W'],
+        A = turned['A']
+        )    
+    return new
+
+def rot_all (pat, ang=0, cent=(51000, 51000)):
+    result = []
+    for elem in pat:
+        result.append(
+            rotate(elem, ang, cent))
     return result
 
-def move (pat, end=(0, 0), start=(0, 0), copy=False):
-    result = []
-    if copy: result.extend(pat)
+def move (elem, end=(0, 0), start=(0, 0)):
     if start != (0, 0):
         dist = (end[0]-start[0], end[1]-start[1])
     else: dist = end
-    for item in pat:
-        new = dict.fromkeys(key_set)
-        new['X'] = item['X'] + dist[0]
-        new['Y'] = item['Y'] + dist[1]
-        for key in ('H', 'W', 'A'):
-            new[key] = item[key]
-        result.append(new)
+    new = add(
+        X = elem['X'] + dist[0],
+        Y = elem['Y'] + dist[1],
+        H = elem['H'],
+        W = elem['W'],
+        A = elem['A']
+        )
+    return new
+
+def move_all (pat, end=(0, 0), start=(0, 0)):
+    result = []
+    for elem in pat:
+        result.append(
+            move(elem, end, start))
     return result
 
 def turn (elem, ang=0):
@@ -222,3 +270,43 @@ def turn (elem, ang=0):
         new['W'] = elem['W']
         new['A'] = new_ang + 1800
     return new
+
+def turn_all (pat, ang=0):
+    result = []
+    for elem in pat:
+        result.append(
+            turn(elem, ang))
+    return result
+
+def extend (elem, enlarge=(0, 0)):
+    new = add(
+        X = elem['X'],
+        Y = elem['Y'],
+        H = elem['H'] + enlarge[0],
+        W = elem['W'] + enlarge[1],
+        A = elem['A']
+        )
+    return new
+
+def ext_all (pat, enlarge=(0, 0)):
+    result = []
+    for elem in pat:
+        result.append(
+            extend(elem, enlarge))
+    return result
+
+def sort (pat, key='A'):
+    stack = dict()
+    key_max = 0
+    for item in pat:
+        if not item[key] in stack:
+            stack[item[key]] = [item]
+        else:
+            stack[item[key]].append(item)
+        if item[key] > key_max: key_max = item[key]
+    result = []
+    for i in range(key_max+1):
+        if i in stack:
+            for item in stack[i]:
+                result.append(item)
+    return result
