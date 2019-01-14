@@ -1,44 +1,69 @@
 import json
 
 dictionary = dict.fromkeys(['en', 'ru'], {})
-dictionary['en'] = {
-    '_ErrorSent_': 'Localization error happened'
-    }
 
-'''
-Actualy phrases = [
-    '_ErrorSent_',
-    'Activate clearing? (Yes/Not/Days)',
-    'All done in',
-    'Are you confirm?',
-    'Are you sure?',
-    "Can't replace this file to '/bak'!",
-    "Can't understand",
-    'Clearing aborted',
-    'Clearing activated',
-    'Deleted',
-    'Done!',
-    'Few files was deleted.',
-    'File',
-    'File not found',
-    'Input 0 or 1:',
-    'Input a file name',
-    'Input maximum limitation of files:',
-    'Input name of DXF-file for processing:',
-    'Input name of object for selection:',
-    'Input name of result file:',
-    'Insertion!',
-    'kB',
-    'Limitation less than 10 days, are you confirm?',
-    'Mistake was made',
-    'Mistake was made during processing',
-    'Round base set at',
-    's.',
-    'Try again',
-    'Unknown problem with configuration file.',
-    'Wrong Int entered'
-    ]
-'''
+dictionary['en'] = {
+    '_ErrorSent_':
+        'Localization error happened',
+    'Activate clearing? (Yes/Not/Days)':
+        None,
+    'All done in':
+        None,
+    'Are you confirm?':
+        None,
+    'Are you sure?':
+        None,
+    "Can't replace this file to '/bak'!":
+        None,
+    "Can't understand":
+        None,
+    'Clearing aborted':
+        None,
+    'Clearing activated':
+        None,
+    'Deleted':
+        None,
+    'Done!':
+        None,
+    'Few files was deleted.':
+        None,
+    'File':
+        None,
+    'File not found':
+        None,
+    'Input 0 or 1:':
+        None,
+    'Input a file name':
+        None,
+    'Input maximum limitation of files:':
+        None,
+    'Input name of DXF-file for processing:':
+        None,
+    'Input name of object for selection:':
+        None,
+    'Input name of result file:':
+        None,
+    'Insertion!':
+        None,
+    'kB':
+        None,
+    'Limitation less than 10 days, are you confirm?':
+        None,
+    'Mistake was made':
+        None,
+    'Mistake was made during processing':
+        None,
+    'Round base set at':
+        None,
+    's.':
+        None,
+    'Try again':
+        None,
+    'Unknown problem with configuration file.':
+        None,
+    'Wrong Int entered':
+        None
+    }
 
 dictionary['ru'] = {
     '_ErrorSent_':
@@ -113,9 +138,6 @@ dictionary['ru'] = {
     'Insertion!':
         'Обнаружен объект-вставка!',
     
-    'kB':
-        'кБ',
-    
     'Limitation less than 10 days, are you confirm?':
         'Срок давности меньше 10 дней, подтверждаете?',
     
@@ -127,9 +149,6 @@ dictionary['ru'] = {
     
     'Round base set at':
         'Порядок округления установлен на',
-    
-    's.':
-        'с.',
     
     'Try again':
         'Попробуйте ещё раз',
@@ -157,22 +176,15 @@ def check (sentence, language):
 
 def think (sentence, language='en'):
     language = check(sentence, language)
-    if not language:
-        sentence = ' '.join(
-            ('|Error: <', language, '> was not set as language at local.py|')
-            )
-        return sentence
     if not language in dictionary:
         language = 'en'
     if sentence in dictionary[language]:
-        sentence = dictionary[language][sentence]
-    elif language != 'en':
-        sentence = think(sentence, 'en')
+        return dictionary[language][sentence]
+    elif (sentence in dictionary['en'] and
+          dictionary['en'][sentence]):
+        return dictionary['en'][sentence]
     else:
-        sentence = ' '.join(
-            ('|Error: <', sentence, '> was not found in local.py|')
-            )
-    return sentence
+        return sentence
 
 def say (sentence, language='en'):
     print(
