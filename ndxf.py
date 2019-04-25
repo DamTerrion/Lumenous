@@ -337,7 +337,7 @@ def loop (lastname=None, repeat=True):
             command = code[1:]
             if command == 'all':
                 for file in listdir():
-                    if file.endswith('.dxf'): ndxf(file)
+                    if file.lower().endswith('.dxf'): ndxf(file)
             #elif command == 'reload':
             #    import_config()
             #    print (config)
