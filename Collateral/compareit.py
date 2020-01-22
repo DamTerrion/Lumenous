@@ -1,11 +1,10 @@
-def compare (name1 = False, name2 = False):
+def compare (name1 = None, name2 = None):
     if not name1: name1 = input('File 1: ')
     if not name2: name2 = input('File 2: ')
     
     try:
         file1 = open(name1, 'rb')
         file2 = open(name2, 'rb')
-        file3 = open(name1+'+'+name2, 'wb')
     except FileNotFoundError:
         return 'Один из файлов не найден'
     except Exception:
@@ -28,13 +27,15 @@ def compare (name1 = False, name2 = False):
             else:
                 convergence[0] += b'#'
                 discrepancy += 1
-        file3.write(convergence[0])
-        return discrepancy
+        try:
+            file3 = open(name1+' ('+str(discrepancy)+') '+name2, 'wb')
+            file3.write(convergence[0])
+        finally:
+            file3.close()
+        return print(discrepancy)
     finally:
         file1.close()
         file2.close()
-        file3.close()
 
 if __name__ == '__main__':
-    print( compare() )
-    
+    compare()    
