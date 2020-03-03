@@ -37,13 +37,6 @@ def import_config (conf_name=default_config):
         conf_file.close()
         return imported
 
-config = import_config()
-# Обязательный импорт параметров из внешнего файла
-print(
-    think('Round base set at', config['language']),
-    config['round']
-    )
-
 def export_config (file_name=default_config, export=config):
     export_file = open(file_name, 'w')
     export_text = ['-= nDXF configuration settings =-', '\n']
@@ -357,6 +350,14 @@ __author__ = {
 
 if __name__ == '__main__':
     
+    config = import_config()
+    # Обязательный импорт параметров из внешнего файла
+    if config['round']<5:
+            print(
+                think('Round base set at', config['language']),
+                config['round']
+                )
+
     if config['clean'].lower() == 'manual':
         clean_need = ask('Activate clearing? (Yes/Not/Days)',
                          config['language'])
