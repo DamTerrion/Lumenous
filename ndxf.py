@@ -188,7 +188,7 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
                             # End of compound object
                             ## Конец составных объектов (полилинии)
     
-    if not dxf_name.endswith('.dxf'):
+    if not dxf_name.lower().endswith('.dxf'):
         dxf_name += '.dxf'
     
     try:
