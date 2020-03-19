@@ -8,6 +8,7 @@ def check (floppy_path="A:\\",
     for file_name in floppy_list:
         if file_name in disk_list:
             if compare(disk_path+file_name, floppy_path+file_name):
+                print('С', file_name, 'возникла проблема, исправляю.')
                 try:
                     remove(floppy_path+file_name)
                     src = open(disk_path+file_name, 'rb')
@@ -19,11 +20,12 @@ def check (floppy_path="A:\\",
                     dst.close()
                 floppy_list.append(file_name)
                 result.append(file_name)
+            else: print(file_name, '\tпроверен.')
     return result
 
 def compare (name1=None, name2=None):
-    if not name1: name1 = input('File 1: ')
-    if not name2: name2 = input('File 2: ')
+    if not name1: name1 = input('Файл 1: ')
+    if not name2: name2 = input('Файл 2: ')
     file1, file2 = open(name1, 'rb'), open(name2, 'rb')
     str1, str2 = file1.read(), file2.read()
     file1.close()
@@ -45,4 +47,5 @@ if __name__ == '__main__':
     result = check()
     for entry in result:
         print(entry)
-    answer = input('Нажмите Enter')
+    print ('\nПроверка закончена')
+    answer = input('Нажмите "Enter".')
