@@ -1,4 +1,4 @@
-from os import replace, path, mkdir, listdir
+from os import replace, path, listdir
 from time import ctime, time as now
 from local import think, say, ask
 import clearing
@@ -115,10 +115,13 @@ def get_log (full_name, start_time, file_size, error=None):
     try:
         log = open(log_file, 'a')
         log.write(result)
+        answer = True
+    except FileNotFoundError:
+        log = open(log_file, 'w')
+        log.write(result)
+        answer = True
     except Exception:
         answer = False
-    else:        
-        answer = True
     finally:
         log.close()
         return answer
@@ -279,8 +282,6 @@ def ndxf (dxf_name, round_base=config['round'], draw=True):
             new = ''.join((new, '  0\n', 'ENDSEC\n', '  0\n', 'EOF\n'))
             
     dxf.close()
-    if path.exists('bak') == False :
-        mkdir ('bak')
     full_name = path.split(path.abspath(dxf_name))
     try: replace (dxf_name, 'bak/'+full_name[1]+'.bak')
     except Exception:

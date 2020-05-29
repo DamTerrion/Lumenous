@@ -1,4 +1,4 @@
-from os import path, walk, remove
+from os import path, mkdir, walk, remove
 from time import ctime, time as now
 from confirm import confirm
 from local import say, ask, think
@@ -12,7 +12,12 @@ def bak (days=60, direction='bak'):
             return False
     
     date = now() - days * 24 * 60 * 60
-    log = open (direction+'/deleted.log', 'a')
+    try:
+        log = open (direction+'/deleted.log', 'a')
+    except FileNotFoundError:
+        if not path.exists('bak'):
+            mkdir ('bak')
+        log = open (direction+'/deleted.log', 'w')
     log.write(
         ''.join((ctime(now()), ',\t', str(days), '\n',
                  '------------------------\n'))
@@ -47,16 +52,16 @@ def call (command=False):
     if not command:
         say('Clearing aborted', lang)
         return False
-    if (type(command) == int or
-        (type(command) == str and command.isdigit()
+    if (isinstance(command, int) or
+        (isinstance(command, str) and command.isdigit()
          )):
         if int(command) > 9 or confirm():
             need_clear (int(command))
             return True
         else:
             return False
-    if (command == True or
-        (type(command) == str and confirm(command)
+    if (command is True or
+        (isinstance(command, str) and confirm(command)
          )):
         say('Clearing activated', lang)
         need_clear()
